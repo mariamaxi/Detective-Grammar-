@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>محقق النحو – سر الكلمات الهاربة</title>
+  <!-- Google Fonts: Cairo & Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#e8f1ff',
+            charcoal: '#fffdf7',
+            gold: '#f59e0b',
+            goldSoft: '#fbbf24',
+            steel: '#2563eb',
+            offwhite: '#0f172a',
+            emeraldGame: '#059669',
+            mutedRed: '#dc2626',
+            comicInk: '#1e293b',
+            comicBlue: '#2563eb',
+            comicLight: '#f4f8ff',
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            tajawal: ['Tajawal', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --navy: #e8f1ff;
+      --charcoal: #fffdf7;
+      --gold: #f59e0b;
+      --steel: #2563eb;
+      --offwhite: #0f172a;
+      --emerald: #10b981;
+      --muted-red: #ef4444;
+      --comic-ink: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #dbeafe;
+      color: var(--offwhite);
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Superhero Comics Background: Sky-Royal Gradient + Halftone Dots + Sunburst Action Lines */
+    .cinematic-bg {
+      background-color: #93c5fd;
+      background-image:
+        radial-gradient(rgba(30, 41, 59, 0.13) 1.5px, transparent 1.5px),
+        repeating-conic-gradient(
+          from 0deg at 50% 28%,
+          rgba(255, 255, 255, 0.28) 0deg 10deg,
+          rgba(59, 130, 246, 0.08) 10deg 20deg
+        ),
+        linear-gradient(180deg, #bae6fd 0%, #93c5fd 48%, #60a5fa 100%);
+      background-size: 16px 16px, 100% 100%, 100% 100%;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .cinematic-bg::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 45%, transparent 58%, rgba(30, 58, 138, 0.22) 100%);
+      z-index: 2;
+    }
+
+    /* Bright Comic Panel Cards with Crisp Ink Borders & Comic Offset Shadow */
+    .glass-panel {
+      background: #fffdf7;
+      border: 3px solid #1e293b;
+      box-shadow: 6px 6px 0px #1e293b;
+      backdrop-filter: none;
+    }
+
+    /* High-Contrast Case Card Style */
+    .case-card-light {
+      background: #ffffff;
+      border: 3px solid #1e293b;
+      box-shadow: 6px 6px 0px #1e293b;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .case-card-light:hover {
+      transform: translate(-2px, -3px);
+      box-shadow: 8px 8px 0px #1e293b;
+    }
+    .case-card-done {
+      background: #ecfdf5;
+      border: 3px solid #059669;
+      box-shadow: 6px 6px 0px #065f46;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .case-card-done:hover {
+      transform: translate(-2px, -3px);
+      box-shadow: 8px 8px 0px #065f46;
+    }
+
+    /* Dust / Comic Sparkle Particles Canvas */
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Smooth Scene Transitions */
+    .scene {
+      display: none;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .scene.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Subtle Camera Zoom on Opening Header */
+    @keyframes cameraZoom {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.07); }
+    }
+    .animate-camera-zoom {
+      animation: cameraZoom 18s ease-in-out infinite alternate;
+    }
+
+    /* Stamp Drop Effect */
+    @keyframes stampDrop {
+      0% { transform: scale(2.1) rotate(-14deg); opacity: 0; }
+      70% { transform: scale(0.95) rotate(-5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(-5deg); opacity: 1; }
+    }
+    .stamp-effect {
+      animation: stampDrop 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Gold Pulse Glow */
+    @keyframes pulseGold {
+      0%, 100% { box-shadow: 4px 4px 0px #1e293b; }
+      50% { box-shadow: 6px 6px 0px #1e293b, 0 0 18px rgba(245, 158, 11, 0.45); }
+    }
+    .pulse-gold {
+      animation: pulseGold 2.6s infinite;
+    }
+
+    /* Card 3D Comic Hover */
+    .card-3d {
+      border: 3px solid #1e293b;
+      box-shadow: 5px 5px 0px #1e293b;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+    .card-3d:hover {
+      transform: translate(-2px, -3px);
+      box-shadow: 7px 7px 0px #1e293b;
+    }
+
+    /* Animated SVG Connection Line on Victory Board */
+    .connect-line {
+      stroke-dasharray: 420;
+      stroke-dashoffset: 420;
+      animation: drawLine 1.5s ease forwards;
+    }
+    @keyframes drawLine {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Diacritic Highlight */
+    .diacritic-highlight {
+      color: #d97706;
+      font-weight: 900;
+    }
+
+    /* Color Swatch Ring */
+    .swatch-btn {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .swatch-btn:hover {
+      transform: scale(1.1);
+    }
+    .swatch-btn.active {
+      box-shadow: 0 0 0 3px #fffdf7, 0 0 0 5px #2563eb;
+      transform: scale(1.12);
+    }
+
+    /* Clickable Word Token Styling (Equal Neutral Look Until Selected) */
+    .word-token {
+      background-color: #ffffff;
+      color: #0f172a;
+      border: 2.5px solid #1e293b;
+      box-shadow: 3px 3px 0px #1e293b;
+      transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+    }
+    .word-token:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background-color: #fef9c3;
+      box-shadow: 4px 4px 0px #1e293b;
+    }
+    .word-token.discovered {
+      background-color: #facc15;
+      color: #0f172a;
+      border-color: #1e293b;
+      box-shadow: 4px 4px 0px #2563eb;
+      transform: translateY(-2px);
+    }
+    .word-token.correct {
+      background-color: #059669;
+      color: #ffffff;
+      border-color: #1e293b;
+      box-shadow: 4px 4px 0px #1e293b;
+    }
+    .word-token.wrong {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      border-color: #dc2626;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 9px; }
+    ::-webkit-scrollbar-track { background: #dbeafe; }
+    ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+  </style>
+</head>
+<body class="cinematic-bg text-offwhite antialiased selection:bg-gold/30 selection:text-offwhite">
+  <!-- Ambient Comic Sparkles -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Global Top Navigation Bar -->
+  <header class="fixed top-0 inset-x-0 z-40 bg-[#fffdf7]/95 backdrop-blur-md border-b-[3px] border-comicInk shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gold border-2 border-comicInk flex items-center justify-center shadow-[2px_2px_0px_#1e293b] shrink-0">
+          <svg class="w-5 h-5 text-comicInk" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path stroke-linecap="round" d="M20 20l-3.5-3.5"></path>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-sm sm:text-base font-black tracking-wide text-comicInk truncate">محقق النحو – سر الكلمات الهاربة</h1>
+          <p class="text-[11px] sm:text-xs text-slate-600 font-tajawal font-bold truncate">إدارة التحقيقات النحوية • الصف الثاني الإعدادي</p>
+        </div>
+      </div>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <!-- Registered Detective Pill -->
+        <div id="header-detective-pill" class="hidden sm:flex items-center gap-2 pl-3 pr-1.5 py-1 rounded-xl bg-navy border-2 border-comicInk shadow-[2px_2px_0px_#1e293b]">
+          <div id="header-avatar-slot" class="w-7 h-7 rounded-lg overflow-hidden bg-white border border-comicInk shrink-0"></div>
+          <div class="text-xs leading-tight">
+            <span class="text-slate-600 font-bold">المحقق:</span>
+            <span id="header-detective-name" class="font-extrabold text-steel mr-1"></span>
+          </div>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button id="btn-sound-toggle" type="button" title="تشغيل/كتم المؤثرات الصوتية"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-amber-50 border-2 border-comicInk shadow-[2px_2px_0px_#1e293b] text-xs font-extrabold text-comicInk transition cursor-pointer">
+          <svg id="icon-sound-on" class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"></path>
+          </svg>
+          <svg id="icon-sound-off" class="w-4 h-4 text-slate-400 hidden" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M23 9l-6 6M17 9l6 6"></path>
+          </svg>
+          <span id="sound-label" class="hidden md:inline">الصوت: مفعل</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Stage -->
+  <main class="relative z-10 pt-24 pb-16 px-4 sm:px-6 max-w-6xl mx-auto min-h-screen flex flex-col justify-center">
+
+    <!-- ==================== SCENE 1: OPENING SCENE (ALWAYS FIRST ON LOAD) ==================== -->
+    <section id="scene-opening" class="scene">
+      <div class="glass-panel rounded-2xl overflow-hidden border border-gold/35">
+        <!-- Cinematic Night City & Agency Header -->
+        <div class="relative h-60 sm:h-76 overflow-hidden bg-navy border-b border-gold/25">
+          <svg class="w-full h-full object-cover animate-camera-zoom" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#050914" />
+                <stop offset="55%" stop-color="#0b132b" />
+                <stop offset="100%" stop-color="#1b2845" />
+              </linearGradient>
+              <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.38" />
+                <stop offset="100%" stop-color="#d4af37" stop-opacity="0" />
+              </radialGradient>
+              <linearGradient id="lampCone" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.36" />
+                <stop offset="100%" stop-color="#d4af37" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <rect width="1200" height="420" fill="url(#nightSky)" />
+            <circle cx="170" cy="85" r="95" fill="url(#moonGlow)" />
+            <circle cx="170" cy="85" r="22" fill="#f4f1ea" opacity="0.88" />
+            <!-- City Skyline -->
+            <path d="M0 325 L0 230 L75 230 L75 260 L140 260 L140 185 L220 185 L220 270 L290 270 L290 210 L370 210 L370 325 Z" fill="#080e1e" />
+            <path d="M830 325 L830 205 L910 205 L910 245 L985 245 L985 170 L1075 170 L1075 250 L1140 250 L1140 215 L1200 215 L1200 325 Z" fill="#080e1e" />
+            <!-- Historic Investigation Agency Building -->
+            <rect x="395" y="105" width="410" height="275" fill="#121828" stroke="#4a6fa5" stroke-width="2" />
+            <polygon points="380,105 600,42 820,105" fill="#0c1222" stroke="#d4af37" stroke-width="2.2" />
+            <rect x="428" y="135" width="18" height="220" fill="#1e293b" />
+            <rect x="518" y="135" width="18" height="220" fill="#1e293b" />
+            <rect x="664" y="135" width="18" height="220" fill="#1e293b" />
+            <rect x="754" y="135" width="18" height="220" fill="#1e293b" />
+            <!-- Lit Windows -->
+            <rect x="462" y="160" width="38" height="55" rx="3" fill="#d4af37" opacity="0.25" />
+            <rect x="558" y="160" width="84" height="60" rx="3" fill="#d4af37" opacity="0.45" />
+            <rect x="700" y="160" width="38" height="55" rx="3" fill="#d4af37" opacity="0.22" />
+            <!-- Agency Plaque -->
+            <rect x="440" y="92" width="320" height="38" rx="5" fill="#0b132b" stroke="#d4af37" stroke-width="2" />
+            <text x="600" y="117" text-anchor="middle" fill="#d4af37" font-family="Cairo" font-weight="800" font-size="19">إدارة التحقيقات النحوية</text>
+            <!-- Entrance & Lamp -->
+            <rect x="564" y="270" width="72" height="110" rx="36" fill="#070a12" stroke="#d4af37" stroke-width="1.6" />
+            <polygon points="548,270 652,270 695,415 505,415" fill="url(#lampCone)" />
+            <!-- Foreground Desk Silhouette -->
+            <rect x="0" y="365" width="1200" height="55" fill="#090c13" />
+            <rect x="85" y="340" width="125" height="28" rx="3" fill="#1e293b" stroke="#d4af37" stroke-opacity="0.45" />
+            <circle cx="1040" cy="344" r="24" fill="none" stroke="#d4af37" stroke-width="4" />
+            <line x1="1058" y1="362" x2="1088" y2="392" stroke="#d4af37" stroke-width="6" stroke-linecap="round" />
+          </svg>
+
+          <!-- Classified Stamp -->
+          <div class="absolute top-4 right-4 sm:top-6 sm:right-6">
+            <div class="stamp-effect inline-flex items-center gap-2 px-4 py-1.5 rounded-lg border-2 border-comicInk bg-mutedRed text-white font-extrabold text-xs sm:text-sm tracking-wider shadow-[3px_3px_0px_#1e293b]">
+              <span class="w-2 h-2 rounded-full bg-amber-300 animate-pulse"></span>
+              ملف سري – وحدة التحقيقات النحوية
+            </div>
+          </div>
+
+          <!-- Returning User Welcome Badge -->
+          <div id="opening-returning-pill" class="hidden absolute bottom-4 right-4 sm:right-6 bg-[#fffdf7] border-2 border-comicInk rounded-xl px-3.5 py-2 flex items-center gap-3 shadow-[4px_4px_0px_#1e293b]">
+            <div id="opening-returning-avatar" class="w-10 h-10 rounded-lg overflow-hidden bg-navy border-2 border-comicInk shrink-0"></div>
+            <div class="text-xs sm:text-sm">
+              <p class="text-slate-600 font-bold">مرحبًا بعودتك،</p>
+              <p class="font-extrabold text-comicInk">المحقق <span id="opening-returning-name" class="text-steel"></span> • <span id="opening-returning-stats" class="text-emeraldGame"></span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story & Chief Briefing -->
+        <div class="p-6 sm:p-10 space-y-6 bg-[#fffdf7]">
+          <div class="space-y-2.5">
+            <p class="text-xs uppercase tracking-widest text-steel font-black">مذكرة افتتاحية • مدينة اللغة العربية</p>
+            <p class="text-base sm:text-lg leading-relaxed text-[#0f172a] font-tajawal font-medium">
+              في مدينة اللغة العربية، وقعت سلسلة من الحوادث الغامضة داخل المدرسة ومكتبتها وحديقتها. اختفت ملفات وأدلة مرتبطة بقواعد النحو، واختلطت الكلمات المعربة بالكلمات المبنية. لم يستطع أحد اكتشاف الحقيقة حتى الآن.
+            </p>
+          </div>
+
+          <!-- Chief of Investigations Dialogue -->
+          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-xl bg-[#f1f5f9] border-2 border-comicInk shadow-[4px_4px_0px_#1e293b]">
+            <div id="opening-chief-avatar" class="shrink-0 w-24 h-24 rounded-xl bg-white border-2 border-comicInk overflow-hidden shadow-md"></div>
+            <div class="space-y-2 text-center sm:text-right">
+              <div class="inline-flex items-center gap-2 text-xs font-extrabold text-steel">
+                <span>رئيس التحقيقات النحوية</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
+                <span class="text-[#334155]">توجيه رسمي</span>
+              </div>
+              <p class="text-sm sm:text-base leading-relaxed text-[#0f172a] font-semibold">
+                «نحتاج إلى محقق يمتلك دقة الملاحظة والقدرة على التحليل. مهمتك ليست مجرد اختيار الإجابة، بل اكتشاف الدليل النحوي الذي يثبت صحتها.»
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Bar -->
+          <div class="pt-3 flex flex-col lg:flex-row items-center justify-between gap-4 border-t-2 border-slate-200">
+            <p class="text-base sm:text-lg font-black text-[#0f172a]">هل أنت مستعد لبدء التحقيق؟</p>
+            <div class="flex flex-wrap items-center justify-center sm:justify-end gap-3 w-full lg:w-auto">
+              <!-- Primary Action -->
+              <button id="btn-opening-ready" type="button"
+                class="pulse-gold flex-1 sm:flex-none px-8 py-3.5 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk text-[#0f172a] font-black text-base transition cursor-pointer">
+                نعم، أنا مستعد
+              </button>
+
+              <!-- Returning User Extra Buttons -->
+              <button id="btn-opening-change-detective" type="button"
+                class="hidden px-5 py-3.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-white font-extrabold text-sm transition cursor-pointer">
+                تغيير المحقق
+              </button>
+              <button id="btn-opening-new-game" type="button"
+                class="hidden px-5 py-3.5 rounded-xl bg-[#dc2626] hover:bg-red-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-white font-extrabold text-sm transition cursor-pointer">
+                بدء جديد
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 2: CHARACTER SELECTION & CUSTOMIZATION ==================== -->
+    <section id="scene-character" class="scene">
+      <div class="glass-panel rounded-2xl p-6 sm:p-8 space-y-7">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-slate-200 pb-4">
+          <div>
+            <span id="char-screen-badge" class="inline-block px-3.5 py-1 rounded-full bg-[#fef9c3] border-2 border-comicInk text-xs font-extrabold text-[#0f172a] mb-1.5">
+              اعتماد الهوية وتخصيص المحقق
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black text-[#0f172a]">اختر المحقق الذي سيمثل فريقك.</h2>
+          </div>
+          <button id="btn-char-cancel" type="button"
+            class="hidden self-start sm:self-auto px-4 py-2 rounded-xl bg-[#f1f5f9] hover:bg-slate-200 border-2 border-comicInk shadow-[2px_2px_0px_#1e293b] text-xs font-extrabold text-[#0f172a] transition cursor-pointer">
+            ← العودة دون تغيير
+          </button>
+        </div>
+
+        <!-- Main Grid: Character Choice + Live Preview & Customization -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+          <!-- Right Column (7 cols): Character Cards + Name Input -->
+          <div class="lg:col-span-7 space-y-5">
+            <!-- Adam & Layla Selection Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Adam Card -->
+              <div id="card-adam" data-char="adam"
+                class="char-card card-3d rounded-2xl p-4 bg-white flex flex-col items-center text-center gap-3 cursor-pointer">
+                <div id="preview-card-adam" class="w-28 h-28 rounded-2xl bg-[#f1f5f9] border-2 border-comicInk overflow-hidden shadow-md"></div>
+                <div class="space-y-1">
+                  <h3 class="text-lg font-black text-[#0f172a]">آدم</h3>
+                  <p class="text-xs text-[#334155] font-tajawal font-medium leading-relaxed">
+                    محقق شاب ذكي يرتدي معطف التحقيق الكلاسيكي ويحمل ملف القضية وجهازًا لوحيًا.
+                  </p>
+                </div>
+                <span class="char-select-pill mt-auto w-full py-2 rounded-xl bg-[#f1f5f9] border-2 border-comicInk font-extrabold text-xs text-[#0f172a] transition">
+                  اختيار آدم
+                </span>
+              </div>
+
+              <!-- Layla Card -->
+              <div id="card-laila" data-char="laila"
+                class="char-card card-3d rounded-2xl p-4 bg-white flex flex-col items-center text-center gap-3 cursor-pointer">
+                <div id="preview-card-laila" class="w-28 h-28 rounded-2xl bg-[#f1f5f9] border-2 border-comicInk overflow-hidden shadow-md"></div>
+                <div class="space-y-1">
+                  <h3 class="text-lg font-black text-[#0f172a]">ليلى</h3>
+                  <p class="text-xs text-[#334155] font-tajawal font-medium leading-relaxed">
+                    محققة شابة واثقة ترتدي معطف التحقيق مع وشاح أنيق وتحمل دفتر ملاحظات وعدسة مكبرة.
+                  </p>
+                </div>
+                <span class="char-select-pill mt-auto w-full py-2 rounded-xl bg-[#f1f5f9] border-2 border-comicInk font-extrabold text-xs text-[#0f172a] transition">
+                  اختيار ليلى
+                </span>
+              </div>
+            </div>
+
+            <!-- Appearance Customization Controls -->
+            <div class="rounded-2xl p-5 bg-white border-[3px] border-comicInk shadow-[5px_5px_0px_#1e293b] space-y-5">
+              <div class="flex items-center justify-between border-b-2 border-slate-200 pb-2.5">
+                <h3 class="text-base font-black text-[#0f172a]">تخصيص المظهر</h3>
+                <span class="text-xs text-steel font-tajawal font-bold">تتحدث المعاينة فورًا</span>
+              </div>
+
+              <!-- 1. Hair Color -->
+              <div class="space-y-2">
+                <label class="block text-xs font-extrabold text-[#334155]">1. لون الشعر</label>
+                <div id="swatches-hair" class="flex flex-wrap items-center gap-3"></div>
+              </div>
+
+              <!-- 2. Coat / Outfit Color -->
+              <div class="space-y-2">
+                <label class="block text-xs font-extrabold text-[#334155]">2. لون اللبس / المعطف</label>
+                <div id="swatches-coat" class="flex flex-wrap items-center gap-3"></div>
+              </div>
+
+              <!-- 3. Skin Tone -->
+              <div class="space-y-2">
+                <label class="block text-xs font-extrabold text-[#334155]">3. لون البشرة</label>
+                <div id="swatches-skin" class="flex flex-wrap items-center gap-3"></div>
+              </div>
+
+              <!-- 4. Investigation Accessory -->
+              <div class="space-y-2">
+                <label class="block text-xs font-extrabold text-[#334155]">4. إكسسوار التحقيق</label>
+                <div id="options-accessory" class="grid grid-cols-3 gap-2.5"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Left Column (5 cols): Live Large Preview + Name + Confirm -->
+          <div class="lg:col-span-5 space-y-5">
+            <div class="rounded-2xl p-6 bg-white border-[3px] border-comicInk shadow-[6px_6px_0px_#1e293b] flex flex-col items-center text-center space-y-4">
+              <span class="px-3.5 py-1 rounded-full bg-[#fef9c3] border-2 border-comicInk text-[#0f172a] text-xs font-black">
+                معاينة بطاقة المحقق المباشرة
+              </span>
+              <div id="live-avatar-preview" class="w-48 h-48 sm:w-56 sm:h-56 rounded-2xl bg-[#f1f5f9] border-[3px] border-comicInk overflow-hidden shadow-md"></div>
+              <div class="w-full space-y-3 text-right pt-1">
+                <div>
+                  <label for="input-detective-name" class="block text-sm font-black text-[#0f172a] mb-1.5">أدخل اسم المحقق</label>
+                  <input id="input-detective-name" type="text" maxlength="32" placeholder="اكتب اسمك هنا..."
+                    class="w-full px-4 py-3 rounded-xl bg-[#f8fafc] border-2 border-comicInk focus:border-steel focus:bg-white focus:outline-none text-[#0f172a] placeholder-slate-400 text-base font-bold transition" />
+                  <p id="char-error-msg" class="hidden mt-1.5 text-xs font-extrabold text-[#dc2626]"></p>
+                </div>
+
+                <button id="btn-confirm-character" type="button"
+                  class="pulse-gold w-full py-3.5 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk text-[#0f172a] font-black text-base transition cursor-pointer">
+                  تأكيد التسجيل وإصدار البطاقة الرسمية
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Official Registration Badge Confirmation (Shown for First-Time Registration) -->
+        <div id="official-badge-box" class="hidden max-w-2xl mx-auto p-6 rounded-2xl bg-[#ecfdf5] border-[3px] border-[#059669] text-center space-y-4 shadow-[6px_6px_0px_#065f46]">
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+            <div id="official-badge-avatar" class="w-24 h-24 rounded-2xl bg-white border-2 border-comicInk overflow-hidden shadow-md shrink-0"></div>
+            <div class="space-y-2 text-center sm:text-right">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#059669] text-white text-xs font-extrabold">
+                <span>✓</span>
+                <span>بطاقة اعتماد رسمية</span>
+              </div>
+              <p id="official-welcome-text" class="text-lg sm:text-xl font-black text-[#064e3b] leading-relaxed"></p>
+            </div>
+          </div>
+          <div class="pt-2">
+            <button id="btn-go-infographic" type="button"
+              class="px-8 py-3 rounded-xl bg-[#2563eb] hover:bg-blue-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-white font-black text-sm sm:text-base transition cursor-pointer">
+              الانتقال إلى ملف القاعدة النحوية ←
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 3: EDUCATIONAL INFOGRAPHIC ==================== -->
+    <section id="scene-infographic" class="scene">
+      <div class="glass-panel rounded-2xl p-6 sm:p-8 space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-black text-steel uppercase tracking-wider">مذكرة مرجعية قبل التحقيق</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-[#0f172a] mt-1">الملف الأول: المعرب والمبني</h2>
+          </div>
+          <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#fef9c3] border-2 border-comicInk text-xs font-extrabold text-[#0f172a]">
+            الصف الثاني الإعدادي • النحو
+          </span>
+        </div>
+
+        <!-- 2-Column Visual Reference Card -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Column 1: الاسم المعرب -->
+          <div class="rounded-2xl p-6 bg-white border-[3px] border-comicInk shadow-[5px_5px_0px_#1e293b] space-y-5 flex flex-col">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-black text-[#0f172a]">1. الاسم المعرب</h3>
+              <span class="px-3 py-1 rounded-lg bg-[#facc15] border-2 border-comicInk text-[#0f172a] text-xs font-black">متغير الآخر</span>
+            </div>
+            <p class="text-sm sm:text-base text-[#0f172a] font-semibold bg-[#fef9c3] p-4 rounded-xl border-r-4 border-[#d97706]">
+              هو الاسم الذي يتغير آخره بتغير موقعه الإعرابي في الجملة.
+            </p>
+            <div class="space-y-2.5">
+              <p class="text-xs font-extrabold text-[#334155]">الأمثلة (لاحظ حركة آخر كلمة الطالب):</p>
+              <div class="p-3.5 rounded-xl bg-[#f1f5f9] border-2 border-comicInk flex items-center justify-between text-base sm:text-lg font-extrabold text-[#0f172a]">
+                <span>حضر الطالب<span class="diacritic-highlight text-2xl">ُ</span>.</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-[#facc15] border border-comicInk text-[#0f172a] font-black">الضمة</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-[#f1f5f9] border-2 border-comicInk flex items-center justify-between text-base sm:text-lg font-extrabold text-[#0f172a]">
+                <span>رأيت الطالب<span class="diacritic-highlight text-2xl">َ</span>.</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-[#facc15] border border-comicInk text-[#0f172a] font-black">الفتحة</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-[#f1f5f9] border-2 border-comicInk flex items-center justify-between text-base sm:text-lg font-extrabold text-[#0f172a]">
+                <span>سلمت على الطالب<span class="diacritic-highlight text-2xl">ِ</span>.</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-[#facc15] border border-comicInk text-[#0f172a] font-black">الكسرة</span>
+              </div>
+            </div>
+            <p class="mt-auto text-sm text-[#334155] font-tajawal font-medium leading-relaxed pt-3 border-t-2 border-slate-200">
+              <strong class="text-[#0f172a]">التوضيح:</strong> نلاحظ أن آخر كلمة الطالب تغير من الضمة إلى الفتحة ثم الكسرة؛ لأنها اسم معرب يختلف موقعه الإعرابي.
+            </p>
+          </div>
+
+          <!-- Column 2: الاسم المبني -->
+          <div class="rounded-2xl p-6 bg-white border-[3px] border-comicInk shadow-[5px_5px_0px_#1e293b] space-y-5 flex flex-col">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-black text-[#2563eb]">2. الاسم المبني</h3>
+              <span class="px-3 py-1 rounded-lg bg-[#2563eb] border-2 border-comicInk text-white text-xs font-black">ثابت الآخر</span>
+            </div>
+            <p class="text-sm sm:text-base text-[#0f172a] font-semibold bg-[#eff6ff] p-4 rounded-xl border-r-4 border-[#2563eb]">
+              هو الاسم الذي يلزم آخره حالة واحدة، ولا يتغير بتغير موقعه الإعرابي.
+            </p>
+            <div class="space-y-2.5">
+              <p class="text-xs font-extrabold text-[#334155]">الأمثلة (لاحظ ثبات كلمة «هذا»):</p>
+              <div class="p-3.5 rounded-xl bg-[#f1f5f9] border-2 border-comicInk flex items-center justify-between text-base sm:text-lg font-extrabold text-[#0f172a]">
+                <span><span class="px-2 py-0.5 rounded bg-[#2563eb] text-white">هذا</span> طالبٌ مجتهدٌ.</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-[#2563eb] text-white font-black">ثابت</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-[#f1f5f9] border-2 border-comicInk flex items-center justify-between text-base sm:text-lg font-extrabold text-[#0f172a]">
+                <span>رأيت <span class="px-2 py-0.5 rounded bg-[#2563eb] text-white">هذا</span> الطالبَ.</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-[#2563eb] text-white font-black">ثابت</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-[#f1f5f9] border-2 border-comicInk flex items-center justify-between text-base sm:text-lg font-extrabold text-[#0f172a]">
+                <span>سلمت على <span class="px-2 py-0.5 rounded bg-[#2563eb] text-white">هذا</span> الطالبِ.</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-[#2563eb] text-white font-black">ثابت</span>
+              </div>
+            </div>
+            <p class="mt-auto text-sm text-[#334155] font-tajawal font-medium leading-relaxed pt-3 border-t-2 border-slate-200">
+              <strong class="text-[#2563eb]">التوضيح:</strong> نلاحظ أن كلمة هذا لم يتغير آخرها رغم اختلاف موقعها في الجمل.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3. Rule Summary Comparison -->
+        <div class="rounded-2xl bg-white border-[3px] border-comicInk p-5 shadow-[5px_5px_0px_#1e293b]">
+          <h4 class="text-sm font-black text-[#0f172a] mb-3">3. ملخص القاعدة وتنبيهات التريكات الذكية</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div class="p-3.5 rounded-xl bg-[#fef9c3] border-2 border-comicInk">
+              <span class="font-black text-[#0f172a] block mb-1">الاسم المعرب:</span>
+              <span class="text-[#334155] font-semibold">يتغير آخره بتغير موقعه الإعرابي.</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-[#eff6ff] border-2 border-comicInk">
+              <span class="font-black text-[#2563eb] block mb-1">الاسم المبني:</span>
+              <span class="text-[#334155] font-semibold">يلزم آخره حالة واحدة.</span>
+            </div>
+          </div>
+          <!-- Smart Tricks Callout for 2nd Prep -->
+          <div class="mt-4 p-4 rounded-xl bg-[#fef9c3] border-2 border-comicInk text-xs sm:text-sm text-[#0f172a] space-y-1.5 font-tajawal font-semibold">
+            <p class="font-black text-[#0f172a]">⚡ تريكات المحقق المحترف (استثناءات الامتحانات):</p>
+            <p>• جميع أسماء الإشارة مبنية <strong>ما عدا المثنى (هذان/هذين، هاتان/هاتين)</strong> فهما <strong>معربان</strong> إعراب المثنى.</p>
+            <p>• جميع الأسماء الموصولة مبنية <strong>ما عدا المثنى (اللذان/اللذين، اللتان/اللتين)</strong> فهما <strong>معربان</strong> إعراب المثنى.</p>
+            <p>• جميع أسماء الشرط والاستفهام مبنية <strong>ما عدا (أيّ)</strong> فهي <strong>معربة</strong>، ومن الظروف المبنية دائمًا: <strong>(حيثُ، أمسِ، الآنَ، منذُ، إذا)</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Bottom Tip Bar & Action -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#f1f5f9] border-2 border-comicInk shadow-[4px_4px_0px_#1e293b]">
+          <p class="text-sm font-bold text-[#0f172a] text-center md:text-right">
+            «المحقق الذكي لا يكتفي بملاحظة الكلمة، بل يبحث عن موقعها في الجملة وطبيعة بنائها.»
+          </p>
+          <button id="btn-infographic-done" type="button"
+            class="shrink-0 w-full md:w-auto px-7 py-3 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-[#0f172a] font-black text-sm sm:text-base transition cursor-pointer">
+            تمت مراجعة القاعدة – ابدأ التحقيق
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 4: MISSION BOARD (ALL 4 CASES HUB) ==================== -->
+    <section id="scene-mission" class="scene">
+      <div class="glass-panel rounded-2xl p-6 sm:p-8 space-y-7">
+
+        <!-- Detective Profile Summary Header (High Contrast White Comic Panel) -->
+        <div class="rounded-2xl p-5 bg-white border-[3px] border-comicInk shadow-[6px_6px_0px_#1e293b] flex flex-col lg:flex-row items-center justify-between gap-5">
+          <div class="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-right">
+            <div id="mission-avatar-slot" class="w-20 h-20 rounded-2xl bg-[#f1f5f9] border-[3px] border-comicInk overflow-hidden shadow-md shrink-0"></div>
+            <div class="space-y-1.5">
+              <span class="text-xs font-black text-[#2563eb]">لوحة التحقيقات الرسمية • الصفحة المجمّعة للقضايا</span>
+              <h2 class="text-xl sm:text-2xl font-black text-[#0f172a]">المحقق <span id="mission-detective-name" class="text-[#2563eb]"></span></h2>
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs font-extrabold">
+                <span class="px-3 py-1 rounded-lg bg-[#fef9c3] border-2 border-comicInk text-[#0f172a]">
+                  إجمالي النقاط: <strong id="mission-total-points">0</strong> / 200
+                </span>
+                <span class="px-3 py-1 rounded-lg bg-[#ecfdf5] border-2 border-[#059669] text-[#064e3b]">
+                  القضايا المحلولة: <strong id="mission-solved-cases">0</strong> / 4
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons on Mission Board -->
+          <div class="flex flex-wrap items-center justify-center gap-2.5">
+            <button id="btn-mission-edit-char" type="button"
+              class="px-4 py-2.5 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-xs sm:text-sm font-black text-[#0f172a] transition cursor-pointer">
+              تغيير المحقق والمظهر
+            </button>
+            <button id="btn-mission-rule" type="button"
+              class="px-4 py-2.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-xs sm:text-sm font-extrabold text-white transition cursor-pointer">
+              مراجعة القاعدة النحوية
+            </button>
+            <button id="btn-mission-home" type="button"
+              class="px-4 py-2.5 rounded-xl bg-[#f1f5f9] hover:bg-slate-200 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-xs sm:text-sm font-extrabold text-[#0f172a] transition cursor-pointer">
+              الشاشة الرئيسية
+            </button>
+            <button id="btn-mission-new-game" type="button"
+              class="px-4 py-2.5 rounded-xl bg-[#dc2626] hover:bg-red-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-xs sm:text-sm font-extrabold text-white transition cursor-pointer">
+              بدء جديد
+            </button>
+          </div>
+        </div>
+
+        <!-- Earned Stamps Showcase -->
+        <div class="rounded-xl p-4 bg-white border-[3px] border-comicInk shadow-[4px_4px_0px_#1e293b] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span class="text-xs font-black text-[#0f172a] shrink-0">🏅 الأختام المكتسبة:</span>
+          <div id="mission-stamps-bar" class="flex flex-wrap items-center justify-center sm:justify-end gap-2"></div>
+        </div>
+
+        <!-- 4 Cases Interactive Dossier Grid -->
+        <div id="cases-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 5: ACTIVE CASE GAMEPLAY ==================== -->
+    <section id="scene-case" class="scene">
+      <div class="space-y-5">
+        <!-- Top In-Case HUD Bar -->
+        <div class="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          <div class="flex items-center justify-between md:justify-start gap-3">
+            <div class="flex items-center gap-3">
+              <div id="hud-avatar-slot" class="w-12 h-12 rounded-xl bg-[#f1f5f9] border-2 border-comicInk overflow-hidden shrink-0"></div>
+              <div>
+                <span id="hud-case-number" class="text-[11px] text-[#2563eb] font-black block">القضية 01</span>
+                <h2 id="hud-case-title" class="text-base sm:text-lg font-black text-[#0f172a]">سر الدفتر المفقود</h2>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btn-quick-rule" type="button"
+                class="px-3 py-1.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 border-2 border-comicInk shadow-[2px_2px_0px_#1e293b] text-xs font-extrabold text-white transition cursor-pointer">
+                ملف القاعدة
+              </button>
+              <button id="btn-case-back-hub" type="button"
+                class="px-3 py-1.5 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk shadow-[2px_2px_0px_#1e293b] text-xs font-black text-[#0f172a] transition cursor-pointer">
+                لوحة القضايا
+              </button>
+            </div>
+          </div>
+
+          <div class="flex-1 max-w-md space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-extrabold">
+              <span class="text-[#334155]">الأدلة المحلولة: <strong id="hud-solved" class="text-[#2563eb]">0/5</strong></span>
+              <span class="text-[#059669]">النقاط: <strong id="hud-score">0</strong> / 50</span>
+            </div>
+            <div class="w-full h-3 rounded-full bg-[#f1f5f9] border-2 border-comicInk overflow-hidden">
+              <div id="hud-progress-bar" class="h-full bg-[#059669] transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Story Summary Banner -->
+        <div class="rounded-2xl p-4 sm:p-5 bg-white border-[3px] border-comicInk shadow-[5px_5px_0px_#1e293b] text-sm leading-relaxed text-[#334155] font-tajawal font-semibold">
+          <strong class="text-[#0f172a] font-black">قصة القضية:</strong>
+          <span id="case-story-text"></span>
+        </div>
+
+        <!-- Clue Navigation Dots -->
+        <div id="clue-dots" class="flex items-center justify-center gap-2"></div>
+
+        <!-- Active Clue Card -->
+        <div id="evidence-card" class="glass-panel rounded-2xl p-6 sm:p-9 space-y-6 transition-all duration-300">
+          <!-- Clue Header -->
+          <div class="flex items-center justify-between gap-3 border-b-2 border-slate-200 pb-4">
+            <span id="ev-number" class="px-3.5 py-1 rounded-lg bg-[#facc15] border-2 border-comicInk text-[#0f172a] text-sm font-black shadow-[2px_2px_0px_#1e293b]">الدليل الأول</span>
+            <span id="ev-counter" class="text-xs font-extrabold text-[#334155]">دليل 1 من 5</span>
+          </div>
+
+          <!-- Step 1: Sentence Display (Interactive Clickable Word Tokens — No Pre-Highlighting!) -->
+          <div class="py-6 px-5 rounded-2xl bg-[#f1f5f9] border-2 border-comicInk text-center space-y-4">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#2563eb] text-white text-xs sm:text-sm font-extrabold">
+              <span>الخطوة 1:</span>
+              <span id="ev-search-directive">اكتشف الكلمة المطلوبة واضغط عليها</span>
+            </div>
+            <div id="ev-sentence" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xl sm:text-3xl font-extrabold leading-relaxed"></div>
+            <p class="text-xs sm:text-sm font-bold text-[#334155]">
+              الحالة: <span id="ev-selected-word-badge" class="font-black text-[#0f172a] px-3 py-1 rounded-lg bg-white border-2 border-comicInk">اضغط على الكلمة الصحيحة داخل الجملة</span>
+            </p>
+          </div>
+
+          <!-- Step 1 Word Discovery Feedback (Shown if wrong word clicked) -->
+          <div id="ev-word-feedback" class="hidden rounded-xl p-4 border-2 transition-all">
+            <div class="flex items-center gap-3">
+              <span id="ev-word-feedback-icon" class="w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0"></span>
+              <p id="ev-word-feedback-title" class="font-extrabold text-sm sm:text-base"></p>
+            </div>
+            <p id="ev-word-feedback-body" class="text-xs sm:text-sm mt-1.5 font-tajawal font-semibold"></p>
+          </div>
+
+          <!-- Step 2: Classification Box (Hidden until the right word is discovered!) -->
+          <div id="ev-step2-box" class="hidden space-y-5 pt-2 border-t-2 border-dashed border-slate-300">
+            <div class="text-center space-y-1.5">
+              <span class="inline-block px-3.5 py-1 rounded-full bg-[#fef9c3] border-2 border-comicInk text-[#0f172a] text-xs font-black">
+                الخطوة 2: تصنيف الكلمة المكتشفة
+              </span>
+              <h3 id="ev-question" class="text-lg sm:text-xl font-black text-[#0f172a]"></h3>
+            </div>
+
+            <!-- Two Selectable Cards: معرب / مبني -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+              <button type="button" data-choice="معرب"
+                class="choice-btn py-4 px-6 rounded-xl bg-white hover:bg-[#fef9c3] border-2 border-comicInk shadow-[4px_4px_0px_#1e293b] text-lg font-black text-[#0f172a] transition cursor-pointer">
+                معرب
+              </button>
+              <button type="button" data-choice="مبني"
+                class="choice-btn py-4 px-6 rounded-xl bg-white hover:bg-[#fef9c3] border-2 border-comicInk shadow-[4px_4px_0px_#1e293b] text-lg font-black text-[#0f172a] transition cursor-pointer">
+                مبني
+              </button>
+            </div>
+
+            <!-- Confirm Button -->
+            <div class="max-w-xl mx-auto">
+              <button id="btn-confirm-answer" type="button"
+                class="w-full py-3.5 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk shadow-[4px_4px_0px_#1e293b] text-[#0f172a] font-black text-base transition cursor-pointer">
+                تأكيد التحليل
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2 Feedback Area -->
+          <div id="ev-feedback" class="hidden rounded-xl p-5 space-y-3 transition-all">
+            <div class="flex items-center gap-3">
+              <span id="ev-feedback-icon" class="w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-base shrink-0"></span>
+              <p id="ev-feedback-title" class="font-extrabold text-base sm:text-lg"></p>
+            </div>
+            <p id="ev-feedback-body" class="text-sm sm:text-base leading-relaxed font-tajawal font-semibold"></p>
+            <div id="ev-next-wrap" class="hidden pt-2">
+              <button id="btn-next-evidence" type="button"
+                class="px-7 py-3 rounded-xl bg-[#059669] hover:bg-emerald-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-white font-black text-sm sm:text-base transition cursor-pointer">
+                الدليل التالي ←
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 6: CASE FINAL VICTORY SCENE ==================== -->
+    <section id="scene-final" class="scene">
+      <div class="glass-panel rounded-2xl p-6 sm:p-10 space-y-8">
+        <!-- Animated SVG Evidence Board Connecting All 5 Clues -->
+        <div class="rounded-2xl bg-white border-[3px] border-comicInk shadow-[5px_5px_0px_#1e293b] p-4 sm:p-6 overflow-hidden">
+          <div class="text-center mb-4 space-y-1.5">
+            <span class="inline-block px-4 py-1 rounded-full bg-[#059669] text-white text-xs font-extrabold">
+              اكتمل ربط الأدلة الخمسة
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-black text-[#0f172a]">تم كشف الحقيقة!</h2>
+            <p id="final-completion-highlight" class="text-sm sm:text-base font-extrabold text-[#2563eb]"></p>
+          </div>
+          <div id="final-evidence-board" class="w-full max-w-3xl mx-auto"></div>
+        </div>
+
+        <!-- Chief Congratulation -->
+        <div class="flex flex-col sm:flex-row items-center gap-5 p-5 rounded-2xl bg-[#f1f5f9] border-[3px] border-comicInk shadow-[4px_4px_0px_#1e293b]">
+          <div id="final-chief-avatar" class="shrink-0 w-20 h-20 rounded-xl bg-white border-2 border-comicInk overflow-hidden shadow-md"></div>
+          <div class="space-y-1.5 text-center sm:text-right">
+            <p class="text-xs font-black text-[#2563eb]">رئيس التحقيقات النحوية</p>
+            <p id="final-chief-msg" class="text-base sm:text-lg leading-relaxed text-[#0f172a] font-tajawal font-bold"></p>
+          </div>
+        </div>
+
+        <!-- Official Results Summary & Stamp -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div class="md:col-span-2 rounded-2xl bg-white border-[3px] border-comicInk shadow-[5px_5px_0px_#1e293b] p-6 space-y-3 text-sm sm:text-base">
+            <div class="flex items-center gap-3 border-b-2 border-slate-200 pb-3 mb-2">
+              <div id="final-detective-avatar" class="w-14 h-14 rounded-xl bg-[#f1f5f9] border-2 border-comicInk overflow-hidden shrink-0"></div>
+              <div>
+                <h3 class="text-lg font-black text-[#0f172a]">لوحة النتائج الرسمية</h3>
+                <p class="text-xs font-bold text-[#334155]">تقرير إغلاق القضية المعتمد</p>
+              </div>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-200">
+              <span class="text-[#334155] font-bold">المحقق:</span>
+              <span id="res-name" class="font-black text-[#0f172a]"></span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-200">
+              <span class="text-[#334155] font-bold">القضية:</span>
+              <span id="res-case-title" class="font-black text-[#0f172a]"></span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-200">
+              <span class="text-[#334155] font-bold">الأدلة المحلولة:</span>
+              <span class="font-black text-[#059669]">5/5</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-200">
+              <span class="text-[#334155] font-bold">النقاط:</span>
+              <span class="font-black text-[#2563eb]">50/50</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-200">
+              <span class="text-[#334155] font-bold">الختم:</span>
+              <span id="res-stamp-name" class="font-black text-[#0f172a]"></span>
+            </div>
+            <div class="flex justify-between py-1.5">
+              <span class="text-[#334155] font-bold">الحالة:</span>
+              <span class="font-black text-[#059669]">القضية مغلقة بنجاح</span>
+            </div>
+          </div>
+
+          <!-- Earned Detective Seal -->
+          <div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-[#ecfdf5] border-[3px] border-[#059669] shadow-[5px_5px_0px_#065f46] text-center space-y-3">
+            <div class="stamp-effect w-36 h-36 rounded-full border-4 border-dashed border-[#059669] flex flex-col items-center justify-center bg-white shadow-md p-3">
+              <svg class="w-9 h-9 text-[#059669] mb-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span class="text-[10px] font-extrabold text-[#334155]">ختم المحقق</span>
+              <span id="final-seal-text" class="text-xs sm:text-sm font-black text-[#064e3b] leading-tight mt-0.5"></span>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-[#059669] text-white text-xs font-extrabold">معتمد رسميًا</span>
+          </div>
+        </div>
+
+        <!-- Closing Message & Buttons -->
+        <div class="text-center space-y-5 pt-4 border-t-2 border-slate-200">
+          <p class="text-base sm:text-lg font-extrabold text-[#0f172a]">
+            «لقد أثبتَّ أن التحقيق النحوي يحتاج إلى الملاحظة والتحليل، وليس مجرد حفظ القواعد.»
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <button id="btn-final-to-hub" type="button"
+              class="pulse-gold px-8 py-3.5 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk text-[#0f172a] font-black text-base transition cursor-pointer">
+              العودة إلى لوحة القضايا
+            </button>
+            <button id="btn-final-replay-case" type="button"
+              class="px-6 py-3.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-white font-extrabold text-sm sm:text-base transition cursor-pointer">
+              إعادة القضية
+            </button>
+            <button id="btn-final-edit-char" type="button"
+              class="px-6 py-3.5 rounded-xl bg-[#f1f5f9] hover:bg-slate-200 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-[#0f172a] font-extrabold text-sm sm:text-base transition cursor-pointer">
+              تغيير المحقق
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Quick Grammar Reference Modal -->
+  <div id="rule-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl max-w-2xl w-full p-6 space-y-4">
+      <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+        <h3 class="text-lg font-black text-[#0f172a]">مراجعة سريعة: المعرب والمبني</h3>
+        <button id="btn-close-rule-modal" type="button" class="text-[#334155] hover:text-[#dc2626] text-xl font-black cursor-pointer">✕</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+        <div class="p-4 rounded-xl bg-[#fef9c3] border-2 border-comicInk space-y-2">
+          <h4 class="font-black text-[#0f172a]">الاسم المعرب</h4>
+          <p class="text-[#334155] font-semibold">هو الاسم الذي يتغير آخره بتغير موقعه الإعرابي في الجملة.</p>
+          <p class="text-xs text-[#0f172a] font-bold">مثال: حضر الطالبُ / رأيت الطالبَ / سلمت على الطالبِ — وكذلك (هذان، هاتان، اللذان، اللتان، أيُّ).</p>
+        </div>
+        <div class="p-4 rounded-xl bg-[#eff6ff] border-2 border-comicInk space-y-2">
+          <h4 class="font-black text-[#2563eb]">الاسم المبني</h4>
+          <p class="text-[#334155] font-semibold">هو الاسم الذي يلزم آخره حالة واحدة، ولا يتغير بتغير موقعه الإعرابي.</p>
+          <p class="text-xs text-[#0f172a] font-bold">مثل: أسماء الإشارة (ما عدا المثنى)، الضمائر، الأسماء الموصولة (ما عدا المثنى)، وبعض الظروف (أمسِ، حيثُ، الآنَ).</p>
+        </div>
+      </div>
+      <div class="text-left">
+        <button id="btn-close-rule-modal-2" type="button" class="px-5 py-2.5 rounded-xl bg-[#facc15] hover:bg-[#fbbf24] border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-[#0f172a] font-black text-sm cursor-pointer">
+          العودة للتحقيق
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Reset Confirmation Modal (No browser confirm/alert) -->
+  <div id="reset-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl max-w-md w-full p-6 space-y-5 text-center">
+      <div class="w-12 h-12 mx-auto rounded-full bg-[#dc2626] border-2 border-comicInk flex items-center justify-center text-white text-xl font-black">!</div>
+      <div class="space-y-2">
+        <h3 class="text-lg font-black text-[#0f172a]">تأكيد البدء الجديد</h3>
+        <p class="text-sm text-[#334155] font-tajawal font-semibold leading-relaxed">
+          هل أنت متأكد؟ سيؤدي «بدء جديد» إلى مسح تقدمك في جميع القضايا الأربع، والنقاط، والأختام، واسم المحقق وتخصيص المظهر والعودة إلى الشاشة الأولى.
+        </p>
+      </div>
+      <div class="flex items-center justify-center gap-3">
+        <button id="btn-confirm-reset" type="button" class="px-5 py-2.5 rounded-xl bg-[#dc2626] hover:bg-red-700 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-white font-extrabold text-sm transition cursor-pointer">
+          نعم، بدء جديد
+        </button>
+        <button id="btn-cancel-reset" type="button" class="px-5 py-2.5 rounded-xl bg-[#f1f5f9] hover:bg-slate-200 border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] text-[#0f172a] font-extrabold text-sm transition cursor-pointer">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. CUSTOMIZATION OPTIONS & ALL 4 CASES DATA (EXACT GRAMMAR CONTENT)
+       ========================================================================= */
+    const HAIR_COLORS = [
+      { id: '#1e1e24', label: 'أسود' },
+      { id: '#4a2e1b', label: 'بني داكن' },
+      { id: '#7c4728', label: 'كستنائي' },
+      { id: '#c29b59', label: 'أشقر رملي' },
+      { id: '#243b55', label: 'أزرق ليلي' }
+    ];
+
+    const COAT_COLORS = [
+      { id: '#b09874', label: 'بيج كلاسيكي' },
+      { id: '#1d3557', label: 'كحلي غامق' },
+      { id: '#3a3f4b', label: 'رمادي فحمي' },
+      { id: '#6b2737', label: 'عنابي داكن' },
+      { id: '#354f52', label: 'أخضر زيتي' }
+    ];
+
+    const SKIN_TONES = [
+      { id: '#f5d0b5', label: 'فاتح' },
+      { id: '#e6b896', label: 'قمحي فاتح' },
+      { id: '#c68e65', label: 'قمحي' },
+      { id: '#8d5524', label: 'أسمر' }
+    ];
+
+    const ACCESSORIES = [
+      { id: 'none', label: 'بدون إضافات' },
+      { id: 'glasses', label: 'نظارة تحقيق أنيقة' },
+      { id: 'hat', label: 'قبعة محقق كلاسيكية' }
+    ];
+
+    const DEFAULT_APPEARANCE = {
+      hairColor: '#1e1e24',
+      coatColor: '#b09874',
+      skinTone: '#e6b896',
+      accessory: 'none'
+    };
+
+    const CASES = [
+      {
+        id: 1,
+        code: 'القضية 01',
+        title: 'سر الدفتر المفقود',
+        difficulty: 'متوسط متقدم',
+        stamp: 'أمين المكتبة',
+        completionHighlight: 'تم حل القضية الأولى! حصلت على ختم المحقق – أمين المكتبة.',
+        story: 'أثناء مراجعة سجلات مكتبة المدرسة، اختفى دفتر مهم يحتوي على أدلة مرتبطة بقواعد النحو. عُثر على خمس جمل في أماكن مختلفة داخل المكتبة. مهمتك اكتشاف الكلمة المطلوبة داخل كل جملة والضغط عليها ثم تصنيفها إلى معربة أو مبنية.',
+        clues: [
+          {
+            id: 1,
+            label: 'الدليل الأول',
+            sentence: 'كافأتُ هذينِ المتفوقينِ في المكتبةِ.',
+            target: 'هذينِ',
+            directive: 'اكتشف «اسم الإشارة» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «هذينِ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: 'أسماء الإشارة مبنية ما عدا المثنى (هذان/هذين، هاتان/هاتين) فيُعرب إعراب المثنى؛ وهنا «هذينِ» مفعول به منصوب وعلامة نصبه الياء.',
+            wordHint: 'ابحث عن الكلمة التي نشير بها إلى المتفوقينِ في الجملة.',
+            hint: 'فخ نحوي! تذكر أن جميع أسماء الإشارة مبنية ما عدا المثنى.'
+          },
+          {
+            id: 2,
+            label: 'الدليل الثاني',
+            sentence: 'سلمتُ على هؤلاءِ الباحثينَ.',
+            target: 'هؤلاءِ',
+            directive: 'اكتشف «اسم الإشارة» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «هؤلاءِ» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«هؤلاءِ» اسم إشارة للجمع، وهو مبني على الكسر في محل جر اسم مجرور.',
+            wordHint: 'ابحث عن اسم الإشارة الذي يدل على الجمع بعد حرف الجر «على».',
+            hint: 'أسماء الإشارة للجمع تلزم حركة واحدة ولا تتغير بتغير موقعها.'
+          },
+          {
+            id: 3,
+            label: 'الدليل الثالث',
+            sentence: 'أمسِ قرأتُ كتابًا نافعًا.',
+            target: 'أمسِ',
+            directive: 'اكتشف «ظرف الزمان» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «أمسِ» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«أمسِ» من الظروف المبنية دائمًا، وهو ظرف زمان مبني على الكسر.',
+            wordHint: 'ابحث عن الكلمة التي تدل على زمن قراءة الكتاب في بداية الجملة.',
+            hint: 'بعض الظروف تلزم حركة واحدة دائمًا مثل: أمسِ، حيثُ، الآنَ، منذُ، إذا.'
+          },
+          {
+            id: 4,
+            label: 'الدليل الرابع',
+            sentence: 'احترمْ أباكَ ومعلمكَ دائمًا.',
+            target: 'أباكَ',
+            directive: 'اكتشف «الاسم من الأسماء الخمسة» واضغط عليه',
+            question: 'حدد نوع الكلمة «أباكَ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: 'الأسماء الخمسة معربة بعلامات فرعية؛ فكلمة «أبا» مفعول به منصوب وعلامة نصبه الألف.',
+            wordHint: 'ابحث عن اسم من الأسماء الخمسة (أب، أخ، حم، فو، ذو) في الجملة.',
+            hint: 'الأسماء الخمسة يتغير آخرها (أبوكَ / أباكَ / أبيكَ) بتغير موقعها الإعرابي.'
+          },
+          {
+            id: 5,
+            label: 'الدليل الخامس',
+            sentence: 'اجلسْ حيثُ يجلسُ العلماءُ.',
+            target: 'حيثُ',
+            directive: 'اكتشف «ظرف المكان» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «حيثُ» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«حيثُ» من الظروف المبنية دائمًا، وهو ظرف مكان مبني على الضم.',
+            wordHint: 'ابحث عن الكلمة التي تدل على مكان الجلوس.',
+            hint: '«حيثُ» من أشهر الظروف التي تلزم الضم دائمًا ولا يتغير آخرها.'
+          }
+        ]
+      },
+      {
+        id: 2,
+        code: 'القضية 02',
+        title: 'لغز المكتبة الغامضة',
+        difficulty: 'صعب',
+        stamp: 'الدليل الثاني',
+        completionHighlight: 'تم حل القضية الثانية! حصلت على ختم الدليل الثاني.',
+        story: 'وصل بلاغ عن كتاب اختفى من المكتبة، وترك المجرم وراءه خمس رسائل غامضة مليئة بالتريكات النحوية. مهمتك اكتشاف الكلمات التي تحتوي على الأدلة بالضغط عليها ثم تصنيفها بدقة.',
+        clues: [
+          {
+            id: 1,
+            label: 'الدليل الأول',
+            sentence: 'فازَ اللذانِ اجتهدا في المسابقةِ.',
+            target: 'اللذانِ',
+            directive: 'اكتشف «الاسم الموصول» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «اللذانِ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: 'الأسماء الموصولة مبنية ما عدا المثنى (اللذان/اللذين، اللتان/اللتين)؛ وهنا «اللذانِ» فاعل مرفوع وعلامة رفعه الألف.',
+            wordHint: 'ابحث عن الاسم الموصول الدال على المثنى المذكر بعد الفعل «فازَ».',
+            hint: 'انتبه لفخ المثنى! جميع الأسماء الموصولة مبنية ما عدا (اللذان، اللتان).'
+          },
+          {
+            id: 2,
+            label: 'الدليل الثاني',
+            sentence: 'أيُّ كتابٍ قرأتَ اليومَ؟',
+            target: 'أيُّ',
+            directive: 'اكتشف «اسم الاستفهام» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «أيُّ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: 'جميع أسماء الاستفهام مبنية ما عدا «أيّ» فهي معربة دائمًا.',
+            wordHint: 'ابحث عن أداة الاستفهام في بداية السؤال.',
+            hint: 'استثناء شهير في الامتحانات: كل أسماء الاستفهام مبنية ما عدا كلمة واحدة!'
+          },
+          {
+            id: 3,
+            label: 'الدليل الثالث',
+            sentence: 'متى يبدأُ اجتماعُ المحققينَ؟',
+            target: 'متى',
+            directive: 'اكتشف «اسم الاستفهام» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «متى» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«متى» اسم استفهام مبني على السكون في محل نصب ظرف زمان.',
+            wordHint: 'ابحث عن الكلمة التي نسأل بها عن الزمان في بداية الجملة.',
+            hint: 'جميع أسماء الاستفهام (ما عدا أيّ) من الأسماء المبنية.'
+          },
+          {
+            id: 4,
+            label: 'الدليل الرابع',
+            sentence: 'كرمتْ المديرةُ الطالباتِ المتفوقاتِ.',
+            target: 'الطالباتِ',
+            directive: 'اكتشف «المفعول به» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «الطالباتِ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: '«الطالباتِ» جمع مؤنث سالم، وهو اسم معرب جاء مفعولًا به منصوبًا وعلامة نصبه الكسرة نيابة عن الفتحة.',
+            wordHint: 'اسأل نفسك: من اللاتي كرمتهنّ المديرةُ؟ اضغط على تلك الكلمة.',
+            hint: 'جمع المؤنث السالم اسم معرب يتغير آخره (الطالباتُ / الطالباتِ) حسب موقعه.'
+          },
+          {
+            id: 5,
+            label: 'الدليل الخامس',
+            sentence: 'أعجبني ما كتبتَهُ في الدفترِ.',
+            target: 'ما',
+            directive: 'اكتشف «الاسم الموصول بمعنى الذي» واضغط عليه',
+            question: 'حدد نوع الكلمة «ما» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«ما» هنا اسم موصول لغير العاقل، وهو اسم مبني على السكون في محل رفع فاعل.',
+            wordHint: 'ابحث عن الكلمة التي يمكن استبدالها بكلمة «الذي» داخل الجملة.',
+            hint: '«ما» الموصولة من الأسماء المبنية التي تلزم السكون دائمًا.'
+          }
+        ]
+      },
+      {
+        id: 3,
+        code: 'القضية 03',
+        title: 'جريمة في الحديقة',
+        difficulty: 'صعب جدًا',
+        stamp: 'الدليل الثالث',
+        completionHighlight: 'تم حل القضية الثالثة! حصلت على ختم الدليل الثالث.',
+        story: 'اختفت بطاقة أسماء النباتات من حديقة المدرسة! وجد المحقق خمس جمل قرب الأشجار والزهور تحتوي على تريكات الشرط والمثنى والظروف المبنية، وعليك اكتشاف الكلمة المشتبه بها وتحليلها بدقة.',
+        clues: [
+          {
+            id: 1,
+            label: 'الدليل الأول',
+            sentence: 'مَنْ يزرعْ خيرًا يحصدْ ثمرَهُ.',
+            target: 'مَنْ',
+            directive: 'اكتشف «اسم الشرط» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «مَنْ» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«مَنْ» اسم شرط جازم، وأسماء الشرط مبنية (ما عدا أيّ)، وهو مبني على السكون.',
+            wordHint: 'ابحث عن أداة الشرط للعاقل في بداية الجملة.',
+            hint: 'جميع أسماء الشرط (ما عدا أيّ) من الأسماء المبنية.'
+          },
+          {
+            id: 2,
+            label: 'الدليل الثاني',
+            sentence: 'سقيتُ هاتينِ الشجرتينِ صباحًا.',
+            target: 'هاتينِ',
+            directive: 'اكتشف «اسم الإشارة» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «هاتينِ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: '«هاتينِ» مثنى اسم الإشارة، وهو معرب إعراب المثنى؛ مفعول به منصوب وعلامة نصبه الياء.',
+            wordHint: 'ابحث عن الكلمة التي نشير بها إلى الشجرتينِ.',
+            hint: 'تذكر الاستثناء: مثنى أسماء الإشارة (هذان/هذين، هاتان/هاتين) معرب!'
+          },
+          {
+            id: 3,
+            label: 'الدليل الثالث',
+            sentence: 'الآنَ انكشفَ سرُّ الحديقةِ.',
+            target: 'الآنَ',
+            directive: 'اكتشف «ظرف الزمان» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «الآنَ» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«الآنَ» من الظروف المبنية دائمًا، وهو ظرف زمان مبني على الفتح.',
+            wordHint: 'ابحث عن الكلمة التي تدل على الوقت الحاضر في بداية الجملة.',
+            hint: '«الآنَ» من الظروف المبنية التي تلزم الفتح دائمًا.'
+          },
+          {
+            id: 4,
+            label: 'الدليل الرابع',
+            sentence: 'تفتحتْ الأزهارُ منذُ الصباحِ.',
+            target: 'منذُ',
+            directive: 'اكتشف «الظرف» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «منذُ» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«منذُ» من الظروف المبنية دائمًا، وهو ظرف زمان مبني على الضم.',
+            wordHint: 'ابحث عن الظرف الذي يسبق كلمة «الصباحِ».',
+            hint: '«منذُ» من الظروف المبنية على الضم ولا يتغير آخرها.'
+          },
+          {
+            id: 5,
+            label: 'الدليل الخامس',
+            sentence: 'أثنيتُ على اللتينِ نظّفتا الحديقةَ.',
+            target: 'اللتينِ',
+            directive: 'اكتشف «الاسم الموصول» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «اللتينِ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: '«اللتينِ» مثنى الاسم الموصول، وهو معرب إعراب المثنى؛ اسم مجرور وعلامة جره الياء.',
+            wordHint: 'ابحث عن الاسم الموصول الدال على المثنى المؤنث بعد حرف الجر «على».',
+            hint: 'فخ المثنى مجددًا! مثنى الأسماء الموصولة (اللذان/اللذين، اللتان/اللتين) معرب.'
+          }
+        ]
+      },
+      {
+        id: 4,
+        code: 'القضية 04',
+        title: 'سر الجائزة الذهبية',
+        difficulty: 'تحدي المحترفين',
+        stamp: 'المحقق المحترف',
+        completionHighlight: 'تم حل القضية الرابعة! حصلت على ختم المحقق المحترف.',
+        story: 'وصلت رسالة إلى مكتب التحقيق تخبرنا أن الجائزة الذهبية اختفت! لم يتبقَ سوى خمس جمل أخيرة مليئة بأصعب تريكات النحو. عليك اكتشاف الكلمة الصحيحة وإثبات أنك أصبحت محققًا محترفًا.',
+        clues: [
+          {
+            id: 1,
+            label: 'الدليل الأول',
+            sentence: 'أيَّ فريقٍ تشجعْ يفزْ بدعمِكَ.',
+            target: 'أيَّ',
+            directive: 'اكتشف «اسم الشرط» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «أيَّ» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: 'أسماء الشرط كلها مبنية ما عدا «أيّ» فهي معربة دائمًا؛ وهنا جاءت مفعولًا به مقدمًا منصوبًا بالفتحة.',
+            wordHint: 'ابحث عن اسم الشرط في بداية الجملة.',
+            hint: 'تذكر الاستثناء الذهبي: «أيّ» معربة دائمًا سواء جاءت للشرط أو للاستفهام.'
+          },
+          {
+            id: 2,
+            label: 'الدليل الثاني',
+            sentence: 'ما أجملَ النظامَ في المدرسةِ!',
+            target: 'ما',
+            directive: 'اكتشف «أداة التعجب» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «ما» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«ما» التعجبية اسم مبني على السكون في محل رفع مبتدأ.',
+            wordHint: 'ابحث عن الكلمة التي يبدأ بها أسلوب التعجب.',
+            hint: '«ما» التعجبية تلزم السكون دائمًا ولا يتغير آخرها.'
+          },
+          {
+            id: 3,
+            label: 'الدليل الثالث',
+            sentence: 'كمْ دليلًا جمعتَ لحلِّ القضيةِ؟',
+            target: 'كمْ',
+            directive: 'اكتشف «اسم الاستفهام» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «كمْ» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«كمْ» الاستفهامية اسم مبني على السكون.',
+            wordHint: 'ابحث عن الكلمة التي نسأل بها عن العدد في بداية الجملة.',
+            hint: 'جميع أسماء الاستفهام (ما عدا أيّ) مبنية.'
+          },
+          {
+            id: 4,
+            label: 'الدليل الرابع',
+            sentence: 'استلمَ ذو الأخلاقِ الجائزةَ الذهبيةَ.',
+            target: 'ذو',
+            directive: 'اكتشف «الفاعل» في الجملة واضغط عليه',
+            question: 'حدد نوع الكلمة «ذو» من حيث الإعراب والبناء:',
+            answer: 'معرب',
+            explanation: '«ذو» من الأسماء الخمسة، وهو اسم معرب جاء فاعلًا مرفوعًا وعلامة رفعه الواو.',
+            wordHint: 'اسأل نفسك: من الذي استلم الجائزة الذهبية؟ (كلمة من الأسماء الخمسة).',
+            hint: '«ذو» من الأسماء الخمسة التي تتغير علامة إعرابها (ذو / ذا / ذي).'
+          },
+          {
+            id: 5,
+            label: 'الدليل الخامس',
+            sentence: 'إذا اجتهدتَ حققتَ النجاحَ.',
+            target: 'إذا',
+            directive: 'اكتشف «الظرف الذي يفيد الشرط» واضغط عليه',
+            question: 'حدد نوع الكلمة «إذا» من حيث الإعراب والبناء:',
+            answer: 'مبني',
+            explanation: '«إذا» ظرف لما يستقبل من الزمان مبني على السكون، وهو من الظروف المبنية دائمًا.',
+            wordHint: 'ابحث عن الكلمة التي تربط بين الاجتهاد وتحقيق النجاح في بداية الجملة.',
+            hint: '«إذا» من الظروف المبنية دائمًا مثل (حيثُ، أمسِ، الآنَ، منذُ).'
+          }
+        ]
+      }
+    ];
+
+    /* =========================================================================
+       2. CLEAN VECTOR CARTOON SVG GENERATOR (ADAM, LAYLA, CHIEF)
+       ========================================================================= */
+    function shadeHex(hex, percent) {
+      const num = parseInt(hex.replace('#', ''), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = Math.max(0, Math.min(255, (num >> 16) + amt));
+      const G = Math.max(0, Math.min(255, ((num >> 8) & 0x00ff) + amt));
+      const B = Math.max(0, Math.min(255, (num & 0x0000ff) + amt));
+      return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+    }
+
+    function getChiefSVG() {
+      return `
+        <svg viewBox="0 0 160 160" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="chiefBg" cx="50%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#22304d" />
+              <stop offset="100%" stop-color="#0d1322" />
+            </radialGradient>
+          </defs>
+          <rect width="160" height="160" fill="url(#chiefBg)" />
+          <!-- Detective Coat & Suit -->
+          <path d="M22 160 C26 112, 48 100, 80 100 C112 100, 134 112, 138 160 Z" fill="#2b3446" stroke="#141a26" stroke-width="2.5" />
+          <!-- Lapels -->
+          <polygon points="55,102 80,142 63,160 38,160" fill="#1e2636" />
+          <polygon points="105,102 80,142 97,160 122,160" fill="#1e2636" />
+          <!-- Crisp Shirt & Gold Tie -->
+          <polygon points="64,100 80,136 96,100" fill="#f4f1ea" />
+          <polygon points="75,104 85,104 83,138 80,144 77,138" fill="#c9a227" />
+          <!-- Gold Detective Badge on Coat -->
+          <polygon points="112,126 118,129 116,137 112,140 108,137 106,129" fill="#d4af37" stroke="#7c5e10" stroke-width="1.2" />
+          <!-- Neck -->
+          <rect x="69" y="84" width="22" height="20" rx="8" fill="#d6a584" />
+          <!-- Ears -->
+          <circle cx="48" cy="64" r="7" fill="#dfae8e" stroke="#8a5a3c" stroke-width="1.5" />
+          <circle cx="112" cy="64" r="7" fill="#dfae8e" stroke="#8a5a3c" stroke-width="1.5" />
+          <!-- Face -->
+          <rect x="50" y="34" width="60" height="58" rx="26" fill="#e6b896" stroke="#8a5a3c" stroke-width="1.8" />
+          <!-- Silver-streaked Cartoon Hair -->
+          <path d="M48 56 C46 26, 66 20, 80 20 C96 20, 114 28, 112 56 C106 42, 95 36, 80 36 C65 36, 54 42, 48 56 Z" fill="#3a4354" stroke="#1f2530" stroke-width="1.8" />
+          <path d="M56 32 Q68 26 80 28" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" />
+          <!-- Eyebrows -->
+          <path d="M58 51 Q65 48 72 51" stroke="#2d3442" stroke-width="2.6" fill="none" stroke-linecap="round" />
+          <path d="M88 51 Q95 48 102 51" stroke="#2d3442" stroke-width="2.6" fill="none" stroke-linecap="round" />
+          <!-- Expressive Cartoon Eyes -->
+          <circle cx="65" cy="61" r="4" fill="#12161f" />
+          <circle cx="95" cy="61" r="4" fill="#12161f" />
+          <circle cx="66.5" cy="59.5" r="1.4" fill="#ffffff" />
+          <circle cx="96.5" cy="59.5" r="1.4" fill="#ffffff" />
+          <!-- Classic Gold-Rimmed Glasses -->
+          <rect x="55" y="54" width="20" height="14" rx="4" fill="rgba(255,255,255,0.12)" stroke="#d4af37" stroke-width="2.2" />
+          <rect x="85" y="54" width="20" height="14" rx="4" fill="rgba(255,255,255,0.12)" stroke="#d4af37" stroke-width="2.2" />
+          <line x1="75" y1="60" x2="85" y2="60" stroke="#d4af37" stroke-width="2.2" />
+          <!-- Nose & Wise Mustache + Warm Smile -->
+          <path d="M80 63 L78 70 L82 70" stroke="#9e6d4e" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M68 77 Q80 71 92 77" stroke="#3a4354" stroke-width="4.2" fill="none" stroke-linecap="round" />
+          <path d="M73 82 Q80 86 87 82" stroke="#8a4b38" stroke-width="2" fill="none" stroke-linecap="round" />
+        </svg>
+      `;
+    }
+
+    function getDetectiveSVG(charType, appearance = DEFAULT_APPEARANCE) {
+      const app = { ...DEFAULT_APPEARANCE, ...appearance };
+      const hair = app.hairColor;
+      const hairDark = shadeHex(hair, -18);
+      const coat = app.coatColor;
+      const coatDark = shadeHex(coat, -22);
+      const coatLight = shadeHex(coat, 14);
+      const skin = app.skinTone;
+      const skinShadow = shadeHex(skin, -14);
+      const skinStroke = shadeHex(skin, -35);
+
+      const glassesMarkup = app.accessory === 'glasses' ? `
+        <g>
+          <rect x="55" y="59" width="20" height="13" rx="4.5" fill="rgba(255,255,255,0.16)" stroke="#d4af37" stroke-width="2.2" />
+          <rect x="85" y="59" width="20" height="13" rx="4.5" fill="rgba(255,255,255,0.16)" stroke="#d4af37" stroke-width="2.2" />
+          <line x1="75" y1="65" x2="85" y2="65" stroke="#d4af37" stroke-width="2.2" />
+        </g>
+      ` : '';
+
+      const hatMarkup = app.accessory === 'hat' ? `
+        <g>
+          <!-- Classic Detective Fedora -->
+          <ellipse cx="80" cy="36" rx="42" ry="7.5" fill="${coatDark}" stroke="#12161f" stroke-width="2" />
+          <path d="M52 35 C54 14, 68 10, 80 13 C92 10, 106 14, 108 35 Z" fill="${coat}" stroke="#12161f" stroke-width="2" />
+          <path d="M53 31 Q80 36 107 31" stroke="#d4af37" stroke-width="4" fill="none" />
+        </g>
+      ` : '';
+
+      if (charType === 'laila') {
+        // LAYLA: Clean Vector Cartoon Female Detective
+        return `
+          <svg viewBox="0 0 160 160" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="lailaBg" cx="50%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#1e2d4d" />
+                <stop offset="100%" stop-color="#0b1221" />
+              </radialGradient>
+            </defs>
+            <rect width="160" height="160" fill="url(#lailaBg)" />
+            <!-- Back Hair -->
+            <path d="M44 62 C40 94, 48 112, 80 112 C112 112, 120 94, 116 62 C114 32, 98 22, 80 22 C62 22, 46 32, 44 62 Z" fill="${hair}" stroke="${hairDark}" stroke-width="2" />
+            <!-- Detective Trench Coat -->
+            <path d="M24 160 C28 114, 48 104, 80 104 C112 104, 132 114, 136 160 Z" fill="${coat}" stroke="#12161f" stroke-width="2.2" />
+            <!-- Coat Lapels -->
+            <polygon points="57,106 80,138 62,160 40,160" fill="${coatDark}" />
+            <polygon points="103,106 80,138 98,160 120,160" fill="${coatDark}" />
+            <!-- Light Detective Scarf -->
+            <path d="M56 100 Q80 118 104 100 Q108 112 80 124 Q52 112 56 100 Z" fill="#e8dfd1" stroke="#c2b299" stroke-width="1.5" />
+            <path d="M74 118 L86 118 L83 142 L74 138 Z" fill="#ded2bf" stroke="#c2b299" stroke-width="1.2" />
+            <!-- Gold Detective Badge -->
+            <polygon points="108,125 114,128 112,135 108,138 104,135 102,128" fill="#d4af37" stroke="#7c5e10" stroke-width="1.2" />
+            <!-- Neck -->
+            <rect x="70" y="88" width="20" height="18" rx="7" fill="${skinShadow}" />
+            <!-- Ears -->
+            <circle cx="51" cy="68" r="6" fill="${skin}" stroke="${skinStroke}" stroke-width="1.4" />
+            <circle cx="109" cy="68" r="6" fill="${skin}" stroke="${skinStroke}" stroke-width="1.4" />
+            <!-- Face -->
+            <rect x="52" y="38" width="56" height="56" rx="26" fill="${skin}" stroke="${skinStroke}" stroke-width="1.7" />
+            <!-- Front Hair Bangs -->
+            <path d="M50 58 C52 34, 68 28, 80 28 C94 28, 108 35, 110 58 C102 46, 94 42, 85 41 C74 44, 62 47, 50 58 Z" fill="${hair}" stroke="${hairDark}" stroke-width="1.6" />
+            <!-- Eyebrows -->
+            <path d="M60 56 Q66 53 72 56" stroke="${hairDark}" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <path d="M88 56 Q94 53 100 56" stroke="${hairDark}" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <!-- Expressive Cartoon Eyes -->
+            <circle cx="66" cy="65" r="4.2" fill="#12161f" />
+            <circle cx="94" cy="65" r="4.2" fill="#12161f" />
+            <circle cx="67.5" cy="63.5" r="1.5" fill="#ffffff" />
+            <circle cx="95.5" cy="63.5" r="1.5" fill="#ffffff" />
+            <!-- Soft Blush -->
+            <ellipse cx="59" cy="73" rx="4.5" ry="2.2" fill="#e57373" opacity="0.28" />
+            <ellipse cx="101" cy="73" rx="4.5" ry="2.2" fill="#e57373" opacity="0.28" />
+            <!-- Nose & Confident Smile -->
+            <path d="M80 67 L79 72 L81.5 72.5" stroke="${skinStroke}" stroke-width="1.4" fill="none" stroke-linecap="round" />
+            <path d="M72 80 Q80 86 88 80" stroke="#9b4a42" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <!-- Props: Notebook (left) & Magnifying Glass (right) -->
+            <rect x="26" y="128" width="24" height="30" rx="3" fill="#c9a227" stroke="#6b510b" stroke-width="1.6" />
+            <line x1="31" y1="136" x2="45" y2="136" stroke="#12161f" stroke-width="1.8" />
+            <line x1="31" y1="143" x2="42" y2="143" stroke="#12161f" stroke-width="1.8" />
+            <circle cx="126" cy="133" r="11" fill="rgba(186,230,253,0.3)" stroke="#d4af37" stroke-width="2.8" />
+            <line x1="134" y1="141" x2="144" y2="152" stroke="#7c4728" stroke-width="4.2" stroke-linecap="round" />
+            ${glassesMarkup}
+            ${hatMarkup}
+          </svg>
+        `;
+      }
+
+      // ADAM: Clean Vector Cartoon Male Detective
+      return `
+        <svg viewBox="0 0 160 160" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="adamBg" cx="50%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#1e2d4d" />
+              <stop offset="100%" stop-color="#0b1221" />
+            </radialGradient>
+          </defs>
+          <rect width="160" height="160" fill="url(#adamBg)" />
+          <!-- Detective Trench Coat -->
+          <path d="M22 160 C26 113, 46 102, 80 102 C114 102, 134 113, 138 160 Z" fill="${coat}" stroke="#12161f" stroke-width="2.2" />
+          <!-- Raised Collar & Lapels -->
+          <polygon points="56,102 80,140 62,160 38,160" fill="${coatDark}" />
+          <polygon points="104,102 80,140 98,160 122,160" fill="${coatDark}" />
+          <path d="M55 102 L65 112 L52 120 Z" fill="${coatLight}" />
+          <path d="M105 102 L95 112 L108 120 Z" fill="${coatLight}" />
+          <!-- Shirt & Tie -->
+          <polygon points="65,102 80,136 95,102" fill="#f4f1ea" />
+          <polygon points="76,106 84,106 82.5,137 80,142 77.5,137" fill="#1d3557" />
+          <!-- Gold Detective Badge -->
+          <polygon points="108,125 114,128 112,135 108,138 104,135 102,128" fill="#d4af37" stroke="#7c5e10" stroke-width="1.2" />
+          <!-- Neck -->
+          <rect x="69" y="87" width="22" height="19" rx="7" fill="${skinShadow}" />
+          <!-- Ears -->
+          <circle cx="50" cy="67" r="6.5" fill="${skin}" stroke="${skinStroke}" stroke-width="1.4" />
+          <circle cx="110" cy="67" r="6.5" fill="${skin}" stroke="${skinStroke}" stroke-width="1.4" />
+          <!-- Face -->
+          <rect x="51" y="37" width="58" height="57" rx="25" fill="${skin}" stroke="${skinStroke}" stroke-width="1.7" />
+          <!-- Neat Youthful Cartoon Hair -->
+          <path d="M48 60 C46 32, 62 22, 82 22 C102 22, 114 34, 112 60 C106 46, 98 40, 84 39 C70 38, 56 44, 48 60 Z" fill="${hair}" stroke="${hairDark}" stroke-width="1.8" />
+          <path d="M62 32 Q76 26 94 31" stroke="${shadeHex(hair, 18)}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.55" />
+          <!-- Eyebrows -->
+          <path d="M59 56 Q65 53 72 56" stroke="${hairDark}" stroke-width="2.5" fill="none" stroke-linecap="round" />
+          <path d="M88 56 Q95 53 101 56" stroke="${hairDark}" stroke-width="2.5" fill="none" stroke-linecap="round" />
+          <!-- Expressive Cartoon Eyes -->
+          <circle cx="65" cy="65" r="4.2" fill="#12161f" />
+          <circle cx="95" cy="65" r="4.2" fill="#12161f" />
+          <circle cx="66.5" cy="63.5" r="1.5" fill="#ffffff" />
+          <circle cx="96.5" cy="63.5" r="1.5" fill="#ffffff" />
+          <!-- Nose & Confident Smile -->
+          <path d="M80 67 L78.5 73 L81.5 73" stroke="${skinStroke}" stroke-width="1.5" fill="none" stroke-linecap="round" />
+          <path d="M71 80 Q80 86 89 80" stroke="#8a4b38" stroke-width="2.2" fill="none" stroke-linecap="round" />
+          <!-- Props: Case File (left) & Tablet (right) -->
+          <rect x="23" y="130" width="26" height="28" rx="3" fill="#d9c298" stroke="#6b510b" stroke-width="1.5" />
+          <rect x="28" y="136" width="16" height="4" rx="1" fill="#c94c4c" />
+          <rect x="114" y="126" width="26" height="32" rx="4" fill="#0b132b" stroke="#d4af37" stroke-width="2" />
+          <line x1="119" y1="135" x2="135" y2="135" stroke="#4a6fa5" stroke-width="2" />
+          <line x1="119" y1="142" x2="131" y2="142" stroke="#d4af37" stroke-width="2" />
+          <line x1="119" y1="149" x2="133" y2="149" stroke="#10b981" stroke-width="2" />
+          ${glassesMarkup}
+          ${hatMarkup}
+        </svg>
+      `;
+    }
+
+    /* =========================================================================
+       3. WEB AUDIO API SOUND ENGINE (NON-INTRUSIVE SYNTHESIZED SFX)
+       ========================================================================= */
+    const SoundEngine = (() => {
+      let ctx = null;
+      let enabled = true;
+
+      function ensureCtx() {
+        if (!ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) ctx = new AudioCtx();
+        }
+        if (ctx && ctx.state === 'suspended') {
+          ctx.resume().catch(() => {});
+        }
+      }
+
+      function tone(freq, duration, type = 'sine', vol = 0.07, delay = 0) {
+        if (!enabled) return;
+        try {
+          ensureCtx();
+          if (!ctx) return;
+          const now = ctx.currentTime + delay;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.exponentialRampToValueAtTime(vol, now + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration + 0.02);
+        } catch (e) {}
+      }
+
+      function toggle() {
+        enabled = !enabled;
+        if (enabled) playClick();
+        return enabled;
+      }
+
+      function playFileOpen() {
+        tone(240, 0.13, 'triangle', 0.055, 0);
+        tone(340, 0.16, 'sine', 0.05, 0.05);
+      }
+
+      function playClick() {
+        tone(520, 0.07, 'sine', 0.045, 0);
+      }
+
+      function playSuccess() {
+        tone(523.25, 0.16, 'sine', 0.07, 0);
+        tone(659.25, 0.18, 'sine', 0.07, 0.08);
+        tone(783.99, 0.32, 'triangle', 0.08, 0.16);
+      }
+
+      function playError() {
+        tone(210, 0.18, 'triangle', 0.055, 0);
+        tone(165, 0.24, 'sine', 0.05, 0.1);
+      }
+
+      function playVictory() {
+        const notes = [392.0, 523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((n, i) => tone(n, 0.42, 'triangle', 0.075, i * 0.11));
+      }
+
+      return { toggle, playFileOpen, playClick, playSuccess, playError, playVictory };
+    })();
+
+    /* =========================================================================
+       4. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+       ========================================================================= */
+    const STORAGE_KEY = 'nahw_detective_v2_4cases';
+
+    function createFreshState() {
+      return {
+        registered: false,
+        name: '',
+        character: 'adam',
+        appearance: { ...DEFAULT_APPEARANCE },
+        casesProgress: {
+          1: { solvedIds: [], completed: false },
+          2: { solvedIds: [], completed: false },
+          3: { solvedIds: [], completed: false },
+          4: { solvedIds: [], completed: false }
+        }
+      };
+    }
+
+    let state = createFreshState();
+    let isEditingProfile = false;
+    let draftCharacter = 'adam';
+    let draftAppearance = { ...DEFAULT_APPEARANCE };
+    let activeCaseId = 1;
+    let activeClueIndex = 0;
+    let wordDiscovered = false;
+    let selectedChoice = null;
+    let infographicReturnTarget = 'mission';
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          state = {
+            ...createFreshState(),
+            ...parsed,
+            appearance: { ...DEFAULT_APPEARANCE, ...(parsed.appearance || {}) },
+            casesProgress: {
+              1: { solvedIds: [], completed: false, ...(parsed.casesProgress?.[1] || {}) },
+              2: { solvedIds: [], completed: false, ...(parsed.casesProgress?.[2] || {}) },
+              3: { solvedIds: [], completed: false, ...(parsed.casesProgress?.[3] || {}) },
+              4: { solvedIds: [], completed: false, ...(parsed.casesProgress?.[4] || {}) }
+            }
+          };
+        }
+      } catch (e) {}
+    }
+
+    function wipeAllProgress() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
+      state = createFreshState();
+      draftCharacter = 'adam';
+      draftAppearance = { ...DEFAULT_APPEARANCE };
+      isEditingProfile = false;
+      activeCaseId = 1;
+      activeClueIndex = 0;
+      selectedChoice = null;
+    }
+
+    function getTotalPoints() {
+      return Object.values(state.casesProgress).reduce((sum, cp) => sum + (cp.solvedIds.length * 10), 0);
+    }
+
+    function getCompletedCasesCount() {
+      return Object.values(state.casesProgress).filter(cp => cp.completed).length;
+    }
+
+    /* =========================================================================
+       5. SCENE ROUTER & HEADER UPDATER
+       ========================================================================= */
+    const scenes = {
+      opening: document.getElementById('scene-opening'),
+      character: document.getElementById('scene-character'),
+      infographic: document.getElementById('scene-infographic'),
+      mission: document.getElementById('scene-mission'),
+      case: document.getElementById('scene-case'),
+      final: document.getElementById('scene-final')
+    };
+
+    function showScene(name) {
+      Object.values(scenes).forEach(el => el.classList.remove('active'));
+      if (scenes[name]) scenes[name].classList.add('active');
+      updateGlobalHeader();
+      if (name === 'opening') renderOpeningScene();
+      if (name === 'mission') renderMissionBoard();
+      if (name === 'case') renderActiveClue();
+      if (name === 'final') renderFinalScene();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateGlobalHeader() {
+      const pill = document.getElementById('header-detective-pill');
+      const nameEl = document.getElementById('header-detective-name');
+      const avatarSlot = document.getElementById('header-avatar-slot');
+      if (state.registered && state.name) {
+        pill.classList.remove('hidden');
+        pill.classList.add('sm:flex');
+        nameEl.textContent = state.name;
+        avatarSlot.innerHTML = getDetectiveSVG(state.character, state.appearance);
+      } else {
+        pill.classList.add('hidden');
+        pill.classList.remove('sm:flex');
+      }
+    }
+
+    /* =========================================================================
+       6. OPENING SCENE RENDERING (ALWAYS FIRST SCREEN ON LOAD)
+       ========================================================================= */
+    function renderOpeningScene() {
+      document.getElementById('opening-chief-avatar').innerHTML = getChiefSVG();
+
+      const returningPill = document.getElementById('opening-returning-pill');
+      const btnChange = document.getElementById('btn-opening-change-detective');
+      const btnNew = document.getElementById('btn-opening-new-game');
+
+      if (state.registered && state.name) {
+        returningPill.classList.remove('hidden');
+        document.getElementById('opening-returning-avatar').innerHTML = getDetectiveSVG(state.character, state.appearance);
+        document.getElementById('opening-returning-name').textContent = state.name;
+        document.getElementById('opening-returning-stats').textContent = `${getCompletedCasesCount()}/4 قضايا • ${getTotalPoints()} نقطة`;
+        btnChange.classList.remove('hidden');
+        btnNew.classList.remove('hidden');
+      } else {
+        returningPill.classList.add('hidden');
+        btnChange.classList.add('hidden');
+        btnNew.classList.add('hidden');
+      }
+    }
+
+    /* =========================================================================
+       7. CHARACTER SELECTION & LIVE CUSTOMIZATION
+       ========================================================================= */
+    function openCharacterScreen(editMode = false) {
+      isEditingProfile = editMode;
+      draftCharacter = state.character || 'adam';
+      draftAppearance = { ...DEFAULT_APPEARANCE, ...state.appearance };
+
+      document.getElementById('input-detective-name').value = state.name || '';
+      document.getElementById('char-error-msg').classList.add('hidden');
+      document.getElementById('official-badge-box').classList.add('hidden');
+
+      const cancelBtn = document.getElementById('btn-char-cancel');
+      const confirmBtn = document.getElementById('btn-confirm-character');
+      const badgeEl = document.getElementById('char-screen-badge');
+
+      if (editMode) {
+        cancelBtn.classList.remove('hidden');
+        confirmBtn.textContent = 'حفظ التعديلات والعودة إلى لوحة التحقيقات';
+        badgeEl.textContent = 'تعديل المحقق والمظهر (تقدمك محفوظ بالكامل)';
+      } else {
+        cancelBtn.classList.add('hidden');
+        confirmBtn.textContent = 'تأكيد التسجيل وإصدار البطاقة الرسمية';
+        badgeEl.textContent = 'الخطوة الأولى • اعتماد الهوية وتخصيص المحقق';
+      }
+
+      renderCustomizationControls();
+      updateCharacterPreviews();
+      showScene('character');
+    }
+
+    function renderCustomizationControls() {
+      // Hair swatches
+      const hairWrap = document.getElementById('swatches-hair');
+      hairWrap.innerHTML = HAIR_COLORS.map(c => `
+        <button type="button" data-hair="${c.id}" title="${c.label}"
+          class="swatch-btn w-9 h-9 rounded-full border-2 border-offwhite/30 cursor-pointer ${draftAppearance.hairColor === c.id ? 'active' : ''}"
+          style="background-color: ${c.id};"></button>
+      `).join('');
+
+      // Coat swatches
+      const coatWrap = document.getElementById('swatches-coat');
+      coatWrap.innerHTML = COAT_COLORS.map(c => `
+        <button type="button" data-coat="${c.id}" title="${c.label}"
+          class="swatch-btn w-9 h-9 rounded-full border-2 border-offwhite/30 cursor-pointer ${draftAppearance.coatColor === c.id ? 'active' : ''}"
+          style="background-color: ${c.id};"></button>
+      `).join('');
+
+      // Skin swatches
+      const skinWrap = document.getElementById('swatches-skin');
+      skinWrap.innerHTML = SKIN_TONES.map(c => `
+        <button type="button" data-skin="${c.id}" title="${c.label}"
+          class="swatch-btn w-9 h-9 rounded-full border-2 border-offwhite/30 cursor-pointer ${draftAppearance.skinTone === c.id ? 'active' : ''}"
+          style="background-color: ${c.id};"></button>
+      `).join('');
+
+      // Accessories
+      const accWrap = document.getElementById('options-accessory');
+      accWrap.innerHTML = ACCESSORIES.map(a => {
+        const active = draftAppearance.accessory === a.id;
+        return `
+          <button type="button" data-acc="${a.id}"
+            class="px-3 py-2.5 rounded-xl text-xs font-extrabold border-2 border-comicInk transition cursor-pointer ${active ? 'bg-[#facc15] text-[#0f172a] shadow-[3px_3px_0px_#1e293b]' : 'bg-[#f1f5f9] text-[#0f172a] hover:bg-[#fef9c3]'}">
+            ${a.label}
+          </button>
+        `;
+      }).join('');
+
+      // Attach listeners
+      hairWrap.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          draftAppearance.hairColor = btn.dataset.hair;
+          SoundEngine.playClick();
+          renderCustomizationControls();
+          updateCharacterPreviews();
+        });
+      });
+
+      coatWrap.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          draftAppearance.coatColor = btn.dataset.coat;
+          SoundEngine.playClick();
+          renderCustomizationControls();
+          updateCharacterPreviews();
+        });
+      });
+
+      skinWrap.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          draftAppearance.skinTone = btn.dataset.skin;
+          SoundEngine.playClick();
+          renderCustomizationControls();
+          updateCharacterPreviews();
+        });
+      });
+
+      accWrap.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          draftAppearance.accessory = btn.dataset.acc;
+          SoundEngine.playClick();
+          renderCustomizationControls();
+          updateCharacterPreviews();
+        });
+      });
+    }
+
+    function updateCharacterPreviews() {
+      // Update Adam & Layla small cards with current draft appearance
+      document.getElementById('preview-card-adam').innerHTML = getDetectiveSVG('adam', draftAppearance);
+      document.getElementById('preview-card-laila').innerHTML = getDetectiveSVG('laila', draftAppearance);
+      // Update Large Live Preview
+      document.getElementById('live-avatar-preview').innerHTML = getDetectiveSVG(draftCharacter, draftAppearance);
+
+      // Highlight Selected Card
+      document.querySelectorAll('.char-card').forEach(card => {
+        const active = card.dataset.char === draftCharacter;
+        card.classList.toggle('bg-[#fef9c3]', active);
+        card.classList.toggle('bg-white', !active);
+        const pill = card.querySelector('.char-select-pill');
+        if (active) {
+          pill.classList.add('bg-[#2563eb]', 'text-white');
+          pill.classList.remove('bg-[#f1f5f9]', 'text-[#0f172a]');
+        } else {
+          pill.classList.remove('bg-[#2563eb]', 'text-white');
+          pill.classList.add('bg-[#f1f5f9]', 'text-[#0f172a]');
+        }
+      });
+    }
+
+    /* =========================================================================
+       8. MISSION BOARD (ALL 4 CASES HUB — HIGH CONTRAST BRIGHT CARDS)
+       ========================================================================= */
+    function renderMissionBoard() {
+      document.getElementById('mission-avatar-slot').innerHTML = getDetectiveSVG(state.character, state.appearance);
+      document.getElementById('mission-detective-name').textContent = state.name;
+      document.getElementById('mission-total-points').textContent = getTotalPoints();
+      document.getElementById('mission-solved-cases').textContent = getCompletedCasesCount();
+
+      // Stamps bar (High Contrast)
+      const stampsBar = document.getElementById('mission-stamps-bar');
+      stampsBar.innerHTML = CASES.map(c => {
+        const done = state.casesProgress[c.id].completed;
+        return `
+          <span class="px-3 py-1 rounded-full text-xs font-extrabold border-2 ${done
+            ? 'bg-[#059669] border-comicInk text-white'
+            : 'bg-[#f1f5f9] border-slate-400 text-[#334155]'}">
+            ${done ? '✓ ' : '🔒 '}${c.stamp}
+          </span>
+        `;
+      }).join('');
+
+      // 4 Case Dossier Cards (Crisp White #FFFFFF / Light Emerald #ECFDF5 when completed)
+      const grid = document.getElementById('cases-grid');
+      grid.innerHTML = CASES.map(c => {
+        const prog = state.casesProgress[c.id];
+        const solvedCount = prog.solvedIds.length;
+        const isDone = prog.completed;
+
+        let statusBadge = '';
+        let btnText = 'فتح ملف القضية';
+        if (isDone) {
+          statusBadge = `<span class="px-3 py-1 rounded-full bg-[#059669] border-2 border-comicInk text-white text-xs font-extrabold">مغلقة بنجاح ✓</span>`;
+          btnText = 'إعادة القضية';
+        } else if (solvedCount > 0) {
+          statusBadge = `<span class="px-3 py-1 rounded-full bg-[#facc15] border-2 border-comicInk text-[#0f172a] text-xs font-black">قيد التحقيق (${solvedCount}/5)</span>`;
+          btnText = 'متابعة التحقيق';
+        } else {
+          statusBadge = `<span class="px-3 py-1 rounded-full bg-[#f1f5f9] border-2 border-comicInk text-[#0f172a] text-xs font-extrabold">لم تبدأ بعد</span>`;
+        }
+
+        const cardClass = isDone ? 'case-card-done' : 'case-card-light';
+        const titleColor = isDone ? 'text-[#064e3b]' : 'text-[#0f172a]';
+        const statBg = isDone ? 'bg-white border-[#059669]' : 'bg-[#f1f5f9] border-comicInk';
+
+        return `
+          <div class="${cardClass} rounded-2xl p-6 flex flex-col justify-between gap-5 relative overflow-hidden">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="px-3 py-1 rounded-lg bg-[#dc2626] border-2 border-comicInk text-white text-xs font-black shadow-[2px_2px_0px_#1e293b]">${c.code}</span>
+                ${statusBadge}
+              </div>
+
+              <div>
+                <h3 class="text-xl font-black ${titleColor}">${c.title}</h3>
+                <p class="text-xs sm:text-sm text-[#334155] font-tajawal font-semibold leading-relaxed mt-2 line-clamp-2">${c.story}</p>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2.5 text-center">
+                <div class="p-2.5 rounded-xl border-2 ${statBg}">
+                  <span class="block text-[10px] font-bold text-[#334155]">المستوى</span>
+                  <span class="text-xs font-black text-[#0f172a]">${c.difficulty}</span>
+                </div>
+                <div class="p-2.5 rounded-xl border-2 ${statBg}">
+                  <span class="block text-[10px] font-bold text-[#334155]">الأدلة</span>
+                  <span class="text-xs font-black text-[#2563eb]">5 أدلة</span>
+                </div>
+                <div class="p-2.5 rounded-xl border-2 ${statBg}">
+                  <span class="block text-[10px] font-bold text-[#334155]">المكافأة</span>
+                  <span class="text-xs font-black text-[#059669]">50 نقطة</span>
+                </div>
+              </div>
+
+              ${isDone ? `
+                <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border-2 border-[#059669] text-xs font-black text-[#064e3b]">
+                  <span>🏅</span>
+                  <span>الختم المكتسب: ${c.stamp}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <button type="button" data-open-case="${c.id}"
+              class="btn-open-case w-full py-3 rounded-xl font-black text-sm border-2 border-comicInk shadow-[3px_3px_0px_#1e293b] transition cursor-pointer ${isDone
+                ? 'bg-[#2563eb] hover:bg-blue-700 text-white'
+                : 'bg-[#facc15] hover:bg-[#fbbf24] text-[#0f172a]'}">
+              ${btnText}
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Attach Open Case Listeners
+      grid.querySelectorAll('.btn-open-case').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const cid = Number(btn.dataset.openCase);
+          openCase(cid);
+        });
+      });
+    }
+
+    function openCase(caseId, forceRestart = false) {
+      activeCaseId = caseId;
+      const prog = state.casesProgress[caseId];
+      if (forceRestart || prog.completed) {
+        // Allow replaying a completed case from clue 1 (without losing completed badge unless desired, or fresh replay of clues)
+        activeClueIndex = 0;
+        if (forceRestart) {
+          prog.solvedIds = [];
+          prog.completed = false;
+          saveState();
+        }
+      } else {
+        // Jump to first unsolved clue
+        const caseObj = CASES.find(c => c.id === caseId);
+        const nextIdx = caseObj.clues.findIndex(cl => !prog.solvedIds.includes(cl.id));
+        activeClueIndex = nextIdx >= 0 ? nextIdx : 0;
+      }
+      SoundEngine.playFileOpen();
+      showScene('case');
+    }
+
+    /* =========================================================================
+       9. ACTIVE CASE GAMEPLAY (2-STEP: DISCOVER WORD FIRST, THEN CLASSIFY)
+       ========================================================================= */
+    function cleanWordToken(rawWord) {
+      return rawWord.replace(/[.,،؛؟!:«»"]/g, '').trim();
+    }
+
+    function renderActiveClue() {
+      const caseObj = CASES.find(c => c.id === activeCaseId);
+      const prog = state.casesProgress[activeCaseId];
+      const clue = caseObj.clues[activeClueIndex];
+      wordDiscovered = false;
+      selectedChoice = null;
+
+      // HUD
+      document.getElementById('hud-avatar-slot').innerHTML = getDetectiveSVG(state.character, state.appearance);
+      document.getElementById('hud-case-number').textContent = caseObj.code;
+      document.getElementById('hud-case-title').textContent = caseObj.title;
+      document.getElementById('case-story-text').textContent = caseObj.story;
+
+      const solvedCount = prog.solvedIds.length;
+      document.getElementById('hud-solved').textContent = `${solvedCount}/5`;
+      document.getElementById('hud-score').textContent = solvedCount * 10;
+      document.getElementById('hud-progress-bar').style.width = `${(solvedCount / 5) * 100}%`;
+
+      // Clue Dots
+      const dotsWrap = document.getElementById('clue-dots');
+      dotsWrap.innerHTML = caseObj.clues.map((cl, idx) => {
+        const isSolved = prog.solvedIds.includes(cl.id);
+        const isCurrent = idx === activeClueIndex;
+        return `
+          <span class="h-3 rounded-full border-2 border-comicInk transition-all ${isCurrent ? 'w-9 bg-[#facc15]' : isSolved ? 'w-3.5 bg-[#059669]' : 'w-3.5 bg-white'}"></span>
+        `;
+      }).join('');
+
+      // Clue Card Content
+      document.getElementById('ev-number').textContent = clue.label;
+      document.getElementById('ev-counter').textContent = `دليل ${clue.id} من 5`;
+      document.getElementById('ev-search-directive').textContent = clue.directive;
+
+      // Render Sentence as Equal Clickable Word Tokens (NO pre-highlighting!)
+      const sentenceWrap = document.getElementById('ev-sentence');
+      const rawWords = clue.sentence.split(/\s+/).filter(Boolean);
+      sentenceWrap.innerHTML = rawWords.map((word, idx) => {
+        const clean = cleanWordToken(word);
+        return `
+          <button type="button" data-word-clean="${clean}" data-word-idx="${idx}"
+            class="word-token px-3.5 py-2 rounded-xl font-extrabold cursor-pointer">
+            ${word}
+          </button>
+        `;
+      }).join('');
+
+      const badgeEl = document.getElementById('ev-selected-word-badge');
+      badgeEl.textContent = 'اضغط على الكلمة الصحيحة داخل الجملة';
+      badgeEl.className = 'font-black text-[#0f172a] px-3 py-1 rounded-lg bg-white border-2 border-comicInk';
+
+      const wordFeedback = document.getElementById('ev-word-feedback');
+      wordFeedback.classList.add('hidden');
+
+      const step2Box = document.getElementById('ev-step2-box');
+      step2Box.classList.add('hidden');
+
+      sentenceWrap.querySelectorAll('.word-token').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (wordDiscovered) return;
+          const picked = btn.dataset.wordClean;
+          const wfIcon = document.getElementById('ev-word-feedback-icon');
+          const wfTitle = document.getElementById('ev-word-feedback-title');
+          const wfBody = document.getElementById('ev-word-feedback-body');
+
+          wordFeedback.classList.remove('hidden', 'bg-red-50', 'border-[#dc2626]', 'bg-[#ecfdf5]', 'border-[#059669]');
+
+          if (picked === clue.target) {
+            wordDiscovered = true;
+            SoundEngine.playSuccess();
+            sentenceWrap.querySelectorAll('.word-token').forEach(b => {
+              b.classList.remove('wrong');
+              b.disabled = true;
+            });
+            btn.classList.add('discovered');
+
+            badgeEl.textContent = `✓ تم اكتشاف الكلمة: ${picked}`;
+            badgeEl.className = 'font-black text-[#064e3b] px-3 py-1 rounded-lg bg-[#ecfdf5] border-2 border-[#059669]';
+
+            wordFeedback.classList.add('bg-[#ecfdf5]', 'border-[#059669]');
+            wfIcon.className = 'w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0 bg-[#059669] text-white';
+            wfIcon.textContent = '✓';
+            wfTitle.className = 'font-black text-sm sm:text-base text-[#064e3b]';
+            wfTitle.textContent = `ممتاز! اكتشفت الكلمة المطلوبة («${picked}»).`;
+            wfBody.className = 'text-xs sm:text-sm mt-1 font-tajawal font-bold text-[#334155]';
+            wfBody.textContent = 'الآن انتقل للخطوة الثانية وصنّف هذه الكلمة إلى معرب أو مبني.';
+
+            // Reveal Step 2
+            step2Box.classList.remove('hidden');
+            step2Box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          } else {
+            SoundEngine.playError();
+            btn.classList.add('wrong');
+            wordFeedback.classList.add('bg-red-50', 'border-[#dc2626]');
+            wfIcon.className = 'w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0 bg-[#dc2626] text-white';
+            wfIcon.textContent = '!';
+            wfTitle.className = 'font-black text-sm sm:text-base text-[#b91c1c]';
+            wfTitle.textContent = `ليست كلمة «${picked}» هي المطلوبة، حاول مرة أخرى!`;
+            wfBody.className = 'text-xs sm:text-sm mt-1 font-tajawal font-bold text-[#0f172a]';
+            wfBody.innerHTML = `<strong class="text-[#2563eb]">تلميح ذكي:</strong> ${clue.wordHint}`;
+          }
+        });
+      });
+
+      document.getElementById('ev-question').textContent = clue.question;
+
+      // Reset Card State
+      const card = document.getElementById('evidence-card');
+      card.style.borderColor = '#1e293b';
+
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('bg-[#2563eb]', 'text-white');
+        btn.classList.add('bg-white', 'text-[#0f172a]');
+      });
+
+      const confirmBtn = document.getElementById('btn-confirm-answer');
+      confirmBtn.classList.remove('hidden');
+
+      document.getElementById('ev-feedback').classList.add('hidden');
+      document.getElementById('ev-next-wrap').classList.add('hidden');
+    }
+
+    function handleConfirmAnswer() {
+      const caseObj = CASES.find(c => c.id === activeCaseId);
+      const prog = state.casesProgress[activeCaseId];
+      const clue = caseObj.clues[activeClueIndex];
+
+      const feedback = document.getElementById('ev-feedback');
+      const icon = document.getElementById('ev-feedback-icon');
+      const title = document.getElementById('ev-feedback-title');
+      const body = document.getElementById('ev-feedback-body');
+      const nextWrap = document.getElementById('ev-next-wrap');
+      const nextBtn = document.getElementById('btn-next-evidence');
+      const card = document.getElementById('evidence-card');
+
+      feedback.classList.remove('hidden', 'bg-[#ecfdf5]', 'border-[#059669]', 'bg-red-50', 'border-[#dc2626]');
+      feedback.classList.add('border-2');
+
+      if (!selectedChoice) {
+        SoundEngine.playError();
+        feedback.classList.add('bg-red-50', 'border-[#dc2626]');
+        icon.className = 'w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-base shrink-0 bg-[#dc2626] text-white';
+        icon.textContent = '!';
+        title.className = 'font-black text-base sm:text-lg text-[#b91c1c]';
+        title.textContent = 'اختر «معرب» أو «مبني» أولًا';
+        body.className = 'text-sm sm:text-base leading-relaxed font-tajawal font-semibold text-[#0f172a]';
+        body.textContent = 'اضغط على أحد الخيارين أعلاه ثم اضغط على زر «تأكيد التحليل».';
+        nextWrap.classList.add('hidden');
+        return;
+      }
+
+      if (selectedChoice === clue.answer) {
+        SoundEngine.playSuccess();
+        card.style.borderColor = '#059669';
+
+        const discoveredBtn = document.querySelector('#ev-sentence .word-token.discovered');
+        if (discoveredBtn) {
+          discoveredBtn.classList.remove('discovered');
+          discoveredBtn.classList.add('correct');
+        }
+
+        feedback.classList.add('bg-[#ecfdf5]', 'border-[#059669]');
+        icon.className = 'w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-base shrink-0 bg-[#059669] text-white';
+        icon.textContent = '✓';
+        title.className = 'font-black text-base sm:text-lg text-[#064e3b]';
+        title.textContent = 'تحليل صحيح! (+10 نقاط) لقد اكتشفت الكلمة وطبيعتها النحوية';
+        body.className = 'text-sm sm:text-base leading-relaxed font-tajawal font-semibold text-[#0f172a]';
+        body.innerHTML = `<strong class="text-[#2563eb]">التفسير النحوي:</strong> ${clue.explanation}`;
+
+        if (!prog.solvedIds.includes(clue.id)) {
+          prog.solvedIds.push(clue.id);
+        }
+        if (prog.solvedIds.length === 5) {
+          prog.completed = true;
+        }
+        saveState();
+
+        document.getElementById('hud-solved').textContent = `${prog.solvedIds.length}/5`;
+        document.getElementById('hud-score').textContent = prog.solvedIds.length * 10;
+        document.getElementById('hud-progress-bar').style.width = `${(prog.solvedIds.length / 5) * 100}%`;
+
+        document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+        document.getElementById('btn-confirm-answer').classList.add('hidden');
+        nextWrap.classList.remove('hidden');
+        nextBtn.textContent = activeClueIndex < caseObj.clues.length - 1
+          ? 'الدليل التالي ←'
+          : 'كشف الحقيقة ←';
+      } else {
+        SoundEngine.playError();
+        card.style.borderColor = '#dc2626';
+
+        feedback.classList.add('bg-red-50', 'border-[#dc2626]');
+        icon.className = 'w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-base shrink-0 bg-[#dc2626] text-white';
+        icon.textContent = '!';
+        title.className = 'font-black text-base sm:text-lg text-[#b91c1c]';
+        title.textContent = 'التصنيف غير صحيح، أعد التفكير في القاعدة!';
+        body.className = 'text-sm sm:text-base leading-relaxed font-tajawal font-semibold text-[#0f172a]';
+        body.innerHTML = `<strong class="text-[#2563eb]">تلميح نحوي:</strong> ${clue.hint}`;
+        nextWrap.classList.add('hidden');
+      }
+    }
+
+    /* =========================================================================
+       10. CASE FINAL VICTORY SCENE
+       ========================================================================= */
+    function renderFinalScene() {
+      const caseObj = CASES.find(c => c.id === activeCaseId);
+      const detectiveName = state.name || 'المحقق';
+
+      document.getElementById('final-completion-highlight').textContent = caseObj.completionHighlight;
+      document.getElementById('final-chief-avatar').innerHTML = getChiefSVG();
+      document.getElementById('final-chief-msg').textContent =
+        `«أحسنت أيها المحقق ${detectiveName}. لقد نجحت في تحليل الأدلة الخمسة في قضية «${caseObj.title}»، وتمكنت من التمييز بين الأسماء المعربة والأسماء المبنية بالاعتماد على القاعدة النحوية.»`;
+
+      document.getElementById('final-detective-avatar').innerHTML = getDetectiveSVG(state.character, state.appearance);
+      document.getElementById('res-name').textContent = detectiveName;
+      document.getElementById('res-case-title').textContent = `${caseObj.code} – ${caseObj.title}`;
+      document.getElementById('res-stamp-name').textContent = caseObj.stamp;
+      document.getElementById('final-seal-text').textContent = caseObj.stamp;
+
+      // Dynamic Animated SVG Evidence Board for This Case's 5 Clues
+      const positions = [
+        { x: 40, y: 28 },
+        { x: 220, y: 140 },
+        { x: 335, y: 28 },
+        { x: 450, y: 140 },
+        { x: 630, y: 28 }
+      ];
+
+      const nodesSvg = caseObj.clues.map((cl, i) => `
+        <g transform="translate(${positions[i].x}, ${positions[i].y})">
+          <rect width="136" height="68" rx="10" fill="#fffdf7" stroke="#1e293b" stroke-width="2.5" />
+          <text x="68" y="28" text-anchor="middle" fill="#0f172a" font-family="Cairo" font-size="13" font-weight="900">الدليل ${cl.id}: ${cl.target}</text>
+          <text x="68" y="51" text-anchor="middle" fill="#059669" font-family="Cairo" font-size="12" font-weight="800">${cl.answer} ✓</text>
+        </g>
+      `).join('');
+
+      document.getElementById('final-evidence-board').innerHTML = `
+        <svg viewBox="0 0 800 235" class="w-full h-auto">
+          <line x1="108" y1="62" x2="288" y2="174" stroke="#2563eb" stroke-width="3" class="connect-line" />
+          <line x1="288" y1="174" x2="403" y2="62" stroke="#dc2626" stroke-width="3" class="connect-line" style="animation-delay:0.3s" />
+          <line x1="403" y1="62" x2="518" y2="174" stroke="#2563eb" stroke-width="3" class="connect-line" style="animation-delay:0.6s" />
+          <line x1="518" y1="174" x2="698" y2="62" stroke="#dc2626" stroke-width="3" class="connect-line" style="animation-delay:0.9s" />
+          <line x1="108" y1="62" x2="698" y2="62" stroke="#059669" stroke-width="2" stroke-dasharray="6 6" opacity="0.8" />
+          ${nodesSvg}
+        </svg>
+      `;
+
+      SoundEngine.playVictory();
+    }
+
+    /* =========================================================================
+       11. EVENT LISTENERS
+       ========================================================================= */
+    // Sound Toggle
+    document.getElementById('btn-sound-toggle').addEventListener('click', () => {
+      const isOn = SoundEngine.toggle();
+      document.getElementById('icon-sound-on').classList.toggle('hidden', !isOn);
+      document.getElementById('icon-sound-off').classList.toggle('hidden', isOn);
+      document.getElementById('sound-label').textContent = isOn ? 'الصوت: مفعل' : 'الصوت: مغلق';
+    });
+
+    // Opening Scene Actions
+    document.getElementById('btn-opening-ready').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      if (state.registered && state.name) {
+        // Returning user goes directly to Mission Board keeping all progress
+        showScene('mission');
+      } else {
+        // First time user goes to Character Selection & Customization
+        openCharacterScreen(false);
+      }
+    });
+
+    document.getElementById('btn-opening-change-detective').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      openCharacterScreen(true);
+    });
+
+    // Character Cards Click
+    document.querySelectorAll('.char-card').forEach(card => {
+      card.addEventListener('click', () => {
+        draftCharacter = card.dataset.char;
+        SoundEngine.playClick();
+        updateCharacterPreviews();
+      });
+    });
+
+    // Cancel Edit Character
+    document.getElementById('btn-char-cancel').addEventListener('click', () => {
+      SoundEngine.playClick();
+      showScene('mission');
+    });
+
+    // Confirm Character Registration or Update
+    document.getElementById('btn-confirm-character').addEventListener('click', () => {
+      const nameVal = document.getElementById('input-detective-name').value.trim();
+      const errEl = document.getElementById('char-error-msg');
+      if (!nameVal) {
+        errEl.textContent = 'يرجى إدخال اسم المحقق قبل المتابعة.';
+        errEl.classList.remove('hidden');
+        SoundEngine.playError();
+        return;
+      }
+
+      errEl.classList.add('hidden');
+      state.name = nameVal;
+      state.character = draftCharacter;
+      state.appearance = { ...draftAppearance };
+      state.registered = true;
+      saveState();
+      updateGlobalHeader();
+      SoundEngine.playSuccess();
+
+      if (isEditingProfile) {
+        // Return directly to Mission Board preserving all case progress
+        showScene('mission');
+      } else {
+        // First time: show official registration badge
+        document.getElementById('official-badge-avatar').innerHTML = getDetectiveSVG(state.character, state.appearance);
+        document.getElementById('official-welcome-text').textContent =
+          `تم تسجيلك رسميًا في وحدة التحقيقات النحوية، المحقق ${state.name}.`;
+        document.getElementById('official-badge-box').classList.remove('hidden');
+        document.getElementById('official-badge-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    // Registration Badge -> Infographic
+    document.getElementById('btn-go-infographic').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      infographicReturnTarget = 'mission';
+      document.getElementById('btn-infographic-done').textContent = 'تمت مراجعة القاعدة – ابدأ التحقيق';
+      showScene('infographic');
+    });
+
+    // Infographic Done -> Mission Board
+    document.getElementById('btn-infographic-done').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      showScene(infographicReturnTarget);
+    });
+
+    // Mission Board Actions
+    document.getElementById('btn-mission-edit-char').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      openCharacterScreen(true);
+    });
+
+    document.getElementById('btn-mission-rule').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      infographicReturnTarget = 'mission';
+      document.getElementById('btn-infographic-done').textContent = 'العودة إلى لوحة التحقيقات';
+      showScene('infographic');
+    });
+
+    document.getElementById('btn-mission-home').addEventListener('click', () => {
+      SoundEngine.playClick();
+      showScene('opening');
+    });
+
+    // In-Case Actions
+    document.getElementById('btn-case-back-hub').addEventListener('click', () => {
+      SoundEngine.playClick();
+      showScene('mission');
+    });
+
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedChoice = btn.dataset.choice;
+        SoundEngine.playClick();
+        document.querySelectorAll('.choice-btn').forEach(b => {
+          const active = b.dataset.choice === selectedChoice;
+          b.classList.toggle('bg-[#2563eb]', active);
+          b.classList.toggle('text-white', active);
+          b.classList.toggle('bg-white', !active);
+          b.classList.toggle('text-[#0f172a]', !active);
+        });
+      });
+    });
+
+    document.getElementById('btn-confirm-answer').addEventListener('click', handleConfirmAnswer);
+
+    document.getElementById('btn-next-evidence').addEventListener('click', () => {
+      const caseObj = CASES.find(c => c.id === activeCaseId);
+      if (activeClueIndex < caseObj.clues.length - 1) {
+        activeClueIndex++;
+        SoundEngine.playFileOpen();
+        renderActiveClue();
+      } else {
+        showScene('final');
+      }
+    });
+
+    // Final Scene Actions
+    document.getElementById('btn-final-to-hub').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      showScene('mission');
+    });
+
+    document.getElementById('btn-final-replay-case').addEventListener('click', () => {
+      openCase(activeCaseId, true);
+    });
+
+    document.getElementById('btn-final-edit-char').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      openCharacterScreen(true);
+    });
+
+    // Quick Rule Modal
+    const ruleModal = document.getElementById('rule-modal');
+    document.getElementById('btn-quick-rule').addEventListener('click', () => {
+      SoundEngine.playFileOpen();
+      ruleModal.classList.remove('hidden');
+    });
+    document.getElementById('btn-close-rule-modal').addEventListener('click', () => ruleModal.classList.add('hidden'));
+    document.getElementById('btn-close-rule-modal-2').addEventListener('click', () => ruleModal.classList.add('hidden'));
+
+    // New Game / Reset Modal (Triggered from Opening Scene OR Mission Board)
+    const resetModal = document.getElementById('reset-modal');
+    const openResetModal = () => {
+      SoundEngine.playClick();
+      resetModal.classList.remove('hidden');
+    };
+    document.getElementById('btn-opening-new-game').addEventListener('click', openResetModal);
+    document.getElementById('btn-mission-new-game').addEventListener('click', openResetModal);
+    document.getElementById('btn-cancel-reset').addEventListener('click', () => resetModal.classList.add('hidden'));
+    document.getElementById('btn-confirm-reset').addEventListener('click', () => {
+      resetModal.classList.add('hidden');
+      wipeAllProgress();
+      SoundEngine.playFileOpen();
+      showScene('opening');
+    });
+
+    /* =========================================================================
+       12. AMBIENT GOLD DUST PARTICLES CANVAS
+       ========================================================================= */
+    function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h, particles;
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+
+      function createParticles() {
+        particles = Array.from({ length: 36 }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.8 + 0.5,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: -Math.random() * 0.28 - 0.08,
+          alpha: Math.random() * 0.42 + 0.1
+        }));
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
+          if (p.x < -10) p.x = w + 10;
+          if (p.x > w + 10) p.x = -10;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      createParticles();
+      window.addEventListener('resize', resize);
+      draw();
+    }
+
+    /* =========================================================================
+       13. INITIALIZATION (ALWAYS OPEN ON SCREEN 1 - OPENING SCENE)
+       ========================================================================= */
+    window.onload = function () {
+      initParticles();
+      loadState();
+      // ALWAYS open on Screen 1 (Opening Scene), never auto-jump to last screen
+      showScene('opening');
+    };
+  </script>
+</body>
+</html>
